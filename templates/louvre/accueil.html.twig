@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page d'accueil!{% endblock %}
+
+{% block body %}
+    <style>
+        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    </style>
+
+    <div class="example-wrapper">
+        <h1>Page d'accueil de Louvre -OC! ✅</h1>
+        <br><br>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Type de tarif</th>
+                    <th scope="col">Prix</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for tarifs in prix %}
+                    <tr>
+                        <td>{{ tarifs.getTypeTarif }}</td>
+                        <td>{{ tarifs.getTarif }} €</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+            <p> *Tarif normal à partir de 12 ans / Gratuit pour les enfants de moins de 4 ans</p>
+    </div>
+{% endblock %}
