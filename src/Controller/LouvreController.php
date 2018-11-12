@@ -5,6 +5,8 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Tarifs;
+use App\Form\ReservationType;
+use App\Entity\Reservations;
 
 class LouvreController extends AbstractController
 {
@@ -27,4 +29,15 @@ class LouvreController extends AbstractController
             'prix' => $prix)
         );
     }
+    
+    /**
+     * @Route("/reservation", name="reservation")
+     */
+    public function new()
+{
+    $reservation = new Reservations();
+    $form = $this->createForm(ReservationType::class, $reservation);
+    return $this->render($form);
+    // ...
+}
 }
