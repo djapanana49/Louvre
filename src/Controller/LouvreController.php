@@ -7,6 +7,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Tarifs;
 use App\Form\ReservationType;
 use App\Entity\Reservations;
+use Symfony\Component\HttpFoundation\Request;
 
 class LouvreController extends AbstractController
 {
@@ -33,11 +34,15 @@ class LouvreController extends AbstractController
     /**
      * @Route("/reservation", name="reservation")
      */
-    public function new()
+    public function newReservation(Request $request)
 {
     $reservation = new Reservations();
+  
     $form = $this->createForm(ReservationType::class, $reservation);
-    return $this->render($form);
+    $form->handleRequest($request);
+    return $this->render('louvre/reservation.html.twig',[
+        'formReservation'=>$form->createView()
+    ]);
     // ...
 }
 }

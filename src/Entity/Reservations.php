@@ -58,60 +58,60 @@ class Reservations
         return $this->id;
     }
 
-    public function getNumReservation(): string
+    public function getNumReservation()
     {
         return $this->num_reservation;
     }
 
-    public function setNumReservation(string $num_reservation): self
+    public function setNumReservation(string $num_reservation="")
     {
         $this->num_reservation = $num_reservation;
 
         return $this;
     }
 
-    public function getDateVisite(): \DateTimeInterface
+    public function getDateVisite()
     {
         return $this->date_visite;
     }
 
-    public function setDateVisite(\DateTimeInterface $date_visite): self
+    public function setDateVisite(\DateTime $date_visite=null)
     {
         $this->date_visite = $date_visite;
 
         return $this;
     }
 
-    public function getDateReservation(): \DateTimeInterface
+    public function getDateReservation()
     {
         return $this->date_reservation;
     }
 
-    public function setDateReservation(\DateTimeInterface $date_reservation): self
+    public function setDateReservation(\DateTime $date_reservation = null)
     {
         $this->date_reservation = $date_reservation;
 
         return $this;
     }
 
-    public function getNbBillets(): int
+    public function getNbBillets()
     {
         return $this->nb_billets;
     }
 
-    public function setNbBillets(int $nb_billets): self
+    public function setNbBillets(int $nb_billets)
     {
         $this->nb_billets = $nb_billets;
 
         return $this;
     }
 
-    public function getMail(): string
+    public function getMail()
     {
         return $this->mail;
     }
 
-    public function setMail(string $mail): self
+    public function setMail(string $mail)
     {
         $this->mail = $mail;
 
@@ -126,7 +126,7 @@ class Reservations
         return $this->billets;
     }
 
-    public function addBillet(Billets $billet): self
+    public function addBillet(Billets $billet)
     {
         if (!$this->billets->contains($billet)) {
             $this->billets[] = $billet;
@@ -136,7 +136,7 @@ class Reservations
         return $this;
     }
 
-    public function removeBillet(Billets $billet): self
+    public function removeBillet(Billets $billet)
     {
         if ($this->billets->contains($billet)) {
             $this->billets->removeElement($billet);
