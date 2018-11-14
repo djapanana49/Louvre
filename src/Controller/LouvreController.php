@@ -8,6 +8,7 @@ use App\Entity\Tarifs;
 use App\Form\ReservationType;
 use App\Entity\Reservations;
 use Symfony\Component\HttpFoundation\Request;
+use DateTimeZone;
 
 class LouvreController extends AbstractController
 {
@@ -37,7 +38,9 @@ class LouvreController extends AbstractController
     public function newReservation(Request $request)
 {
     $reservation = new Reservations();
-  
+    $reservation->setDateReservation(new \DateTime('now',new DateTimeZone('Europe/Paris')));
+    $reservation->setDateVisite(new \DateTime('now',new DateTimeZone('Europe/Paris')));
+    $reservation->setNumReservation(uniqid(). time());
     $form = $this->createForm(ReservationType::class, $reservation);
     $form->handleRequest($request);
     return $this->render('louvre/reservation.html.twig',[
