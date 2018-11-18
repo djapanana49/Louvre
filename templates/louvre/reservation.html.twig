@@ -13,6 +13,17 @@
         <h1>Page de réservation !</h1>
         <br><br>
         {{ form_start(formReservation) }}
-        {{ form_widget(formReservation) }}
+        {{ form_row(formReservation.date_reservation,{
+            'label':'Date de réservation'}) }}
+        {{ form_row(formReservation.date_visite,{
+            'label':'Choisissez la date de votre visite'})}}
+        {{ form_row(formReservation.nb_billets,{
+            'label':'Nombre de billets','attr':{
+            'placeholder':'Choisissez un nombre de billets'}
+            } )}}
+         {{ form_row(formReservation.mail,{
+            'label':'Adresse mail','attr':{
+            'placeholder':'Votre adresse mail'}
+            } )}}
         {{ form_end(formReservation) }}
 {% endblock %}

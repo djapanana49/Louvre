@@ -14,12 +14,12 @@ class ReservationType extends AbstractType
     {
         $builder
                 ->add('num_reservation')
-                ->add('date_visite', DateTimeType::class, array(
-                    'widget' => 'choice',
-                    'format' => 'dd-MM-yyyy HH:mm'))
-                ->add('date_reservation', DateTimeType::class, array(
-                    'widget' => 'single_text',
-                    'format' => 'dd/MM/yyyy HH:mm'))
+                ->add('date_visite',DateTimeType::class, array(
+                    'format'=> 'dd/MM/yyyy',
+                ))
+                ->add('date_reservation',DateTimeType::class, array(
+                    'format'=> 'dd/MM/yyyy',
+                    'widget' => 'single_text',))
                 ->add('nb_billets')
                 ->add('mail')
         ;
