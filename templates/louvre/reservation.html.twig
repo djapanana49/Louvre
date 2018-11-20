@@ -13,17 +13,120 @@
         <h1>Page de réservation !</h1>
         <br><br>
         {{ form_start(formReservation) }}
-        {{ form_row(formReservation.date_reservation,{
-            'label':'Date de réservation'}) }}
-        {{ form_row(formReservation.date_visite,{
-            'label':'Choisissez la date de votre visite'})}}
-        {{ form_row(formReservation.nb_billets,{
-            'label':'Nombre de billets','attr':{
-            'placeholder':'Choisissez un nombre de billets'}
-            } )}}
+       {# {{ form_row(formReservation.date_reservation,{
+            'label':'Date de réservation'}) }}#}
+       <fieldset>
+           <legend>Choisissez la date de votre visite</legend>
+       {{ form_row(formReservation.date_visite,{
+            'label':'Date de votre visite'})}}
+       </fieldset>
+       <br>
+        <fieldset>
+                <legend>Sélectionnez un type de billet</legend>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" id="journee"
+                           name="choix" value="journee" checked />
+                    <label class="form-check-label" for="journee">Journée</label>
+                </div>
+
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" id="demi-journee"
+                           name="choix" value="demi-journee" />
+                    <label class="form-check-label" for="demi-journee">Demi-journée</label>
+                </div>
+            </fieldset>
+        <br>
+        
          {{ form_row(formReservation.mail,{
             'label':'Adresse mail','attr':{
             'placeholder':'Votre adresse mail'}
             } )}}
+            <table cellspacing='5px'>
+            <tr>
+	<td>Billets:</td>
+	<td>
+        {{ form_row(formReservation.nb_billets,{
+            'label':'Nombre de billets:','attr':{
+            'placeholder':'Choisissez un nombre de billets',
+            'name':'nb_billets',}
+            } )}}
+	<input type=button  name="validation" value="Valider">
+	</td>
+            </tr>
+            </table>
         {{ form_end(formReservation) }}
+        {% block javascripts %}
+            <script language="Javascript">
+        document.getElementsByTagName("validation").onclick = function() {ajoutinput(nb_billets)};
+            function ajoutinput(nb_billets)
+	{
+                var nb_billets=document.getElementById("reservation_nb_billets");
+		var mon_formulaire=document.getElementsByTagName("reservation").item(0);
+		var table = document.createElement('table');//création d'un tableau
+		table.id = 'MaTable';
+      // document.getElementById('MaTable').style.borderSpacing="5px";
+		var hMembers = document.getElementById('MaTable');
+		if(hMembers)nb_billets.parentNode.removeChild(hMembers);
+	   if(nb_billets.value.match(/^\d+$/))
+		   {
+				var tbody = document.createElement('tbody');
+				for(var i=0; i<nb_billets.value; i++)
+					{
+						 var row   = document.createElement('tr');
+						 var cell  = document.createElement('td');
+						 var num   = document.createTextNode('Billet n°'+ (i+1));
+						 cell.appendChild(num);
+						 row.appendChild(cell);
+						 tbody.appendChild(row);
+
+						 
+						 var name  = document.createTextNode('Nom: ');// Le texte devant les valeurs "nom"
+						 var input= document.createElement('input');// création dynamique d'un input
+						 var name2  = document.createTextNode('Prenom: ');// Le texte devant les valeurs "nom"
+						 var input2= document.createElement('input');// création dynamique d'un input
+						 var name3  = document.createTextNode('Date de Naissance: ');// Le texte devant les valeurs "nom"
+						 var input3= document.createElement('input');// création dynamique d'un input
+                         var name4  = document.createTextNode('Tarif réduit');// Le texte devant les valeurs "nom"
+						 var input4= document.createElement('input');// création dynamique d'un input
+		                 input3.setAttribute("type", "date");
+                         input4.setAttribute("type", "checkbox");
+						 input.size = 30;
+						 input.name= 'nom' + (i+1);
+						 input.id='nompax'+ (i+1);// on donne une référence id à l'input pour pouvoir le manipuler plus tard
+                         input2.size = 30;
+						 input2.name= 'prenom' + (i+1);
+						 input2.id='prenompax'+ (i+1);// on donne une référence id à l'input pour pouvoir le manipuler plus tard
+                         input3.size = 30;
+						 input3.name= 'dob' + (i+1);
+						 input3.id='dobpax'+ (i+1);// on donne une référence id à l'input pour pouvoir le manipuler plus tard
+                         input3.name= 'reduction' + (i+1);
+						 input3.id='reducpax'+ (i+1);// on donne une référence id à l'input pour pouvoir le manipuler plus tard
+						 cell.appendChild(name);
+						 cell.appendChild(input);
+						 cell.appendChild(name2);
+						 cell.appendChild(input2);
+                         cell.appendChild(name3);
+						 cell.appendChild(input3);
+                         cell.appendChild(name4);
+						 cell.appendChild(input4);
+						 row.appendChild(cell);
+						 tbody.appendChild(row);
+					}     
+			table.appendChild(tbody);
+			mon_formulaire.appendChild(table);// le tableau est associé au formulaire
+            document.getElementById('MaTable').style.borderSpacing="5px";
+			nb_billets.parentNode.insertBefore(table,nb_billets.nextSibling);//gestion de l'insertion des inputs dynamiques
+ 
+		   }        
+
+	   else
+	   { 
+			   alert('Merci de n\'entrer que des chiffres !');
+				nb_billets.value = '';
+				nb_billets.focus();
+		}     
+ }
+ </script>
+        {% endblock %}   
 {% endblock %}
