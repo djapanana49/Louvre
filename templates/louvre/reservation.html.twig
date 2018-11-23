@@ -12,7 +12,9 @@
     <div class="example-wrapper">
         <h1>Page de réservation !</h1>
         <br><br>
-        {{ form_start(formReservation) }}
+        {{ form_start(formReservation,{'attr':{
+            'id':'reservation'}
+            }) }}
        {# {{ form_row(formReservation.date_reservation,{
             'label':'Date de réservation'}) }}#}
        <fieldset>
@@ -54,81 +56,37 @@
             'name':'reservation_billets',}
             }) }}
          
-	<input type="button" id="validation" name="validation" value="Valider">
+	<input type="button" id="validation" name="validation" value="Valider" class="btn btn-success">
+	<input type="button" id="reset" nam="reset" value="Réinitialiser" class="btn btn-warning">
 	
         {{ form_end(formReservation) }}
         {% block javascripts %}
-            <script language="Javascript">
-                var div1 = document.getElementById("reservation_billets");
-                var align = div1.getAttribute('data-prototype');
-                document.forms['reservation']['reservation_billets'].innerHTML =align.replace(/__name__label__/g, 'Billet n°');
-                console.log(align); // affic
-               $(document).ready(function() {
-    // On récupère la balise <div> en question qui contient l'attribut « data-prototype » qui nous intéresse.
-    var $container = $('div#LouvreBundle_reservation_billets');
+<script language="Javascript">
     
-
-    // On définit un compteur unique pour nommer les champs qu'on va ajouter dynamiquement
-    var index = $container.find(':input').length;
-
-    // On ajoute un nouveau champ à chaque clic sur le lien d'ajout.
-    $('#validation').click(function(e) {
-     
-
-    // La fonction qui ajoute un formulaire CategoryType
-    function addBillet($container) {
-      // Dans le contenu de l'attribut « data-prototype », on remplace :
-      // - le texte "__name__label__" qu'il contient par le label du champ
-      // - le texte "__name__" qu'il contient par le numéro du champ
-      var template = $container.attr('data-prototype')
-        .replace(/__name__label__/, 'Billet n°' + (index+1))
-        .replace(/__name__/,        index)
-      ;
-
-      // On crée un objet jquery qui contient ce template
-      var $prototype = $(template);
-
-      // On ajoute au prototype un lien pour pouvoir supprimer la catégorie
-      addDeleteLink($prototype);
-
-      // On ajoute le prototype modifié à la fin de la balise <div>
-      $container.append($prototype);
-
-      // Enfin, on incrémente le compteur pour que le prochain ajout se fasse avec un autre numéro
-      index++;
+  
+    document.querySelector("#validation").addEventListener('click', function() {
+            
+                var billet = document.querySelector("#reservation_billets");
+                var prototype = billet.dataset.prototype;
+                var index=document.getElementById("reservation_nb_billets");
+                if(index.value==""){
+                    index.value=1
+                console.log("index est égal à 1")
+                }
+            
+                for(var i=0;i<index.value;i++){
+                    
+                billet.innerHTML +=prototype.replace(/__name__label__/g, 'Billet n°'+(i+1));
+                   
+                    }
+              // event.preventDefault();
+              }
+            
+            );
+    document.querySelector("#reset").addEventListener('click', function() {
+        document.querySelector("#reservation").reset();
     }
-    addBillet($container);
-
-      e.preventDefault(); // évite qu'un # apparaisse dans l'URL
-      return false;
-    });
-
-    // On ajoute un premier champ automatiquement s'il n'en existe pas déjà un (cas d'une nouvelle annonce par exemple).
-    if (index == 0) {
-      addBillet($container);
-    } else {
-      // S'il existe déjà des catégories, on ajoute un lien de suppression pour chacune d'entre elles
-      $container.children('div').each(function() {
-        addDeleteLink($(this));
-      });
-    }
-    // La fonction qui ajoute un lien de suppression d'une catégorie
-    function addDeleteLink($prototype) {
-      // Création du lien
-      var $deleteLink = $('<a href="#" class="btn btn-danger">Supprimer</a>');
-
-      // Ajout du lien
-      $prototype.append($deleteLink);
-
-      // Ajout du listener sur le clic du lien pour effectivement supprimer la catégorie
-      $deleteLink.click(function(e) {
-        $prototype.remove();
-
-        e.preventDefault(); // évite qu'un # apparaisse dans l'URL
-        return false;
-      });
-    }
-  });
+    );
 </script>
         {% endblock %}   
 {% endblock %}
