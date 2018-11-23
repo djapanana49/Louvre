@@ -42,91 +42,93 @@
             'label':'Adresse mail','attr':{
             'placeholder':'Votre adresse mail'}
             } )}}
-            <table cellspacing='5px'>
-            <tr>
-	<td>Billets:</td>
-	<td>
+           
+            <div>Billets:</div>
+
         {{ form_row(formReservation.nb_billets,{
             'label':'Nombre de billets:','attr':{
             'placeholder':'Choisissez un nombre de billets',
             'name':'nb_billets',}
             } )}}
-	<input type=button  name="validation" value="Valider">
-	</td>
-            </tr>
-            </table>
+         {{ form_row(formReservation.billets,{'attr':{
+            'name':'reservation_billets',}
+            }) }}
+         
+	<input type="button" id="validation" name="validation" value="Valider">
+	
         {{ form_end(formReservation) }}
         {% block javascripts %}
             <script language="Javascript">
-        document.getElementsByTagName("validation").onclick = function() {ajoutinput(nb_billets)};
-            function ajoutinput(nb_billets)
-	{
-                var nb_billets=document.getElementById("reservation_nb_billets");
-		var mon_formulaire=document.getElementsByTagName("reservation").item(0);
-		var table = document.createElement('table');//création d'un tableau
-		table.id = 'MaTable';
-      // document.getElementById('MaTable').style.borderSpacing="5px";
-		var hMembers = document.getElementById('MaTable');
-		if(hMembers)nb_billets.parentNode.removeChild(hMembers);
-	   if(nb_billets.value.match(/^\d+$/))
-		   {
-				var tbody = document.createElement('tbody');
-				for(var i=0; i<nb_billets.value; i++)
-					{
-						 var row   = document.createElement('tr');
-						 var cell  = document.createElement('td');
-						 var num   = document.createTextNode('Billet n°'+ (i+1));
-						 cell.appendChild(num);
-						 row.appendChild(cell);
-						 tbody.appendChild(row);
+                var div1 = document.getElementById("reservation_billets");
+                var align = div1.getAttribute('data-prototype');
+                document.forms['reservation']['reservation_billets'].innerHTML =align.replace(/__name__label__/g, 'Billet n°');
+                console.log(align); // affic
+               $(document).ready(function() {
+    // On récupère la balise <div> en question qui contient l'attribut « data-prototype » qui nous intéresse.
+    var $container = $('div#LouvreBundle_reservation_billets');
+    
 
-						 
-						 var name  = document.createTextNode('Nom: ');// Le texte devant les valeurs "nom"
-						 var input= document.createElement('input');// création dynamique d'un input
-						 var name2  = document.createTextNode('Prenom: ');// Le texte devant les valeurs "nom"
-						 var input2= document.createElement('input');// création dynamique d'un input
-						 var name3  = document.createTextNode('Date de Naissance: ');// Le texte devant les valeurs "nom"
-						 var input3= document.createElement('input');// création dynamique d'un input
-                         var name4  = document.createTextNode('Tarif réduit');// Le texte devant les valeurs "nom"
-						 var input4= document.createElement('input');// création dynamique d'un input
-		                 input3.setAttribute("type", "date");
-                         input4.setAttribute("type", "checkbox");
-						 input.size = 30;
-						 input.name= 'nom' + (i+1);
-						 input.id='nompax'+ (i+1);// on donne une référence id à l'input pour pouvoir le manipuler plus tard
-                         input2.size = 30;
-						 input2.name= 'prenom' + (i+1);
-						 input2.id='prenompax'+ (i+1);// on donne une référence id à l'input pour pouvoir le manipuler plus tard
-                         input3.size = 30;
-						 input3.name= 'dob' + (i+1);
-						 input3.id='dobpax'+ (i+1);// on donne une référence id à l'input pour pouvoir le manipuler plus tard
-                         input3.name= 'reduction' + (i+1);
-						 input3.id='reducpax'+ (i+1);// on donne une référence id à l'input pour pouvoir le manipuler plus tard
-						 cell.appendChild(name);
-						 cell.appendChild(input);
-						 cell.appendChild(name2);
-						 cell.appendChild(input2);
-                         cell.appendChild(name3);
-						 cell.appendChild(input3);
-                         cell.appendChild(name4);
-						 cell.appendChild(input4);
-						 row.appendChild(cell);
-						 tbody.appendChild(row);
-					}     
-			table.appendChild(tbody);
-			mon_formulaire.appendChild(table);// le tableau est associé au formulaire
-            document.getElementById('MaTable').style.borderSpacing="5px";
-			nb_billets.parentNode.insertBefore(table,nb_billets.nextSibling);//gestion de l'insertion des inputs dynamiques
- 
-		   }        
+    // On définit un compteur unique pour nommer les champs qu'on va ajouter dynamiquement
+    var index = $container.find(':input').length;
 
-	   else
-	   { 
-			   alert('Merci de n\'entrer que des chiffres !');
-				nb_billets.value = '';
-				nb_billets.focus();
-		}     
- }
- </script>
+    // On ajoute un nouveau champ à chaque clic sur le lien d'ajout.
+    $('#validation').click(function(e) {
+     
+
+    // La fonction qui ajoute un formulaire CategoryType
+    function addBillet($container) {
+      // Dans le contenu de l'attribut « data-prototype », on remplace :
+      // - le texte "__name__label__" qu'il contient par le label du champ
+      // - le texte "__name__" qu'il contient par le numéro du champ
+      var template = $container.attr('data-prototype')
+        .replace(/__name__label__/, 'Billet n°' + (index+1))
+        .replace(/__name__/,        index)
+      ;
+
+      // On crée un objet jquery qui contient ce template
+      var $prototype = $(template);
+
+      // On ajoute au prototype un lien pour pouvoir supprimer la catégorie
+      addDeleteLink($prototype);
+
+      // On ajoute le prototype modifié à la fin de la balise <div>
+      $container.append($prototype);
+
+      // Enfin, on incrémente le compteur pour que le prochain ajout se fasse avec un autre numéro
+      index++;
+    }
+    addBillet($container);
+
+      e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+      return false;
+    });
+
+    // On ajoute un premier champ automatiquement s'il n'en existe pas déjà un (cas d'une nouvelle annonce par exemple).
+    if (index == 0) {
+      addBillet($container);
+    } else {
+      // S'il existe déjà des catégories, on ajoute un lien de suppression pour chacune d'entre elles
+      $container.children('div').each(function() {
+        addDeleteLink($(this));
+      });
+    }
+    // La fonction qui ajoute un lien de suppression d'une catégorie
+    function addDeleteLink($prototype) {
+      // Création du lien
+      var $deleteLink = $('<a href="#" class="btn btn-danger">Supprimer</a>');
+
+      // Ajout du lien
+      $prototype.append($deleteLink);
+
+      // Ajout du listener sur le clic du lien pour effectivement supprimer la catégorie
+      $deleteLink.click(function(e) {
+        $prototype.remove();
+
+        e.preventDefault(); // évite qu'un # apparaisse dans l'URL
+        return false;
+      });
+    }
+  });
+</script>
         {% endblock %}   
 {% endblock %}

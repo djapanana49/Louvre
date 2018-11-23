@@ -8,6 +8,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use App\Form\BilletsType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 
 class ReservationType extends AbstractType
 {
@@ -22,8 +25,13 @@ class ReservationType extends AbstractType
                /* ->add('date_reservation',DateTimeType::class, array(
                     'format'=> 'dd/MM/yyyy',
                     'widget' => 'single_text',))*/
-                ->add('nb_billets')
+                ->add('nb_billets',TextType::class)
                 ->add('mail')
+                ->add('billets', CollectionType::class, array(
+        'entry_type'   => BilletsType::class,
+        'allow_add'    => true,
+        'allow_delete' => true
+      ))
         ;
     }
 
