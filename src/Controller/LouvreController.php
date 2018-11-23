@@ -37,12 +37,15 @@ class LouvreController extends AbstractController
      */
     public function newReservation(Request $request)
 {
+    //$entityManager = $this->getDoctrine()->getManager();
     $reservation = new Reservations();
     $reservation->setDateReservation(new \DateTime('now',new DateTimeZone('Europe/Paris')));
     $reservation->setDateVisite(new \DateTime('now',new DateTimeZone('Europe/Paris')));
     $reservation->setNumReservation(uniqid(). time());
     $form = $this->createForm(ReservationType::class, $reservation);
     $form->handleRequest($request);
+    //$entityManager->persist($reservation);
+    //$entityManager->flush();
     return $this->render('louvre/reservation.html.twig',[
         'formReservation'=>$form->createView()
     ]);

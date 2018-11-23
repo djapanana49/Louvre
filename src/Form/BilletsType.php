@@ -20,6 +20,8 @@ class BilletsType extends AbstractType
             ->add('date_de_naissance',DateTimeType::class, array(
                     'format'=> 'dd/MM/yyyy',
                     'widget' => 'single_text',
+                    'attr' => array(
+                        'placeholder'=> 'JJ/MM/AAAA',)
                 ))
             ->add('tarif_reduit', CheckboxType::class)
         ;
