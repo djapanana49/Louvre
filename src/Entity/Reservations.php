@@ -5,6 +5,8 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ReservationsRepository")
@@ -25,21 +27,38 @@ class Reservations
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime
      */
     private $date_visite;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\DateTime
      */
     private $date_reservation;
 
     /**
      * @ORM\Column(type="integer")
+     * * @Assert\Range(
+     *      min = 1,
+     *      max = 20,
+     *      minMessage = "vous devez choisir au moins {{ limit }} billet",
+     *      maxMessage = "Vous ne pouvez pas choisir plus de {{ limit }}billets"
+     * )
+     * @Assert\Type(
+     *     type="integer",
+     *     message="La valeur {{ value }} n\'est pas un {{ type }}."
+     * )
      */
     private $nb_billets;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\Email(
+     *     message = "L\'email '{{ value }}' n\'est pas valide.",
+     *     checkMX = true
+     * )
+     * 
      */
     private $mail;
 

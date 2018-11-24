@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BilletsRepository")
@@ -18,11 +20,13 @@ class Billets
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank
      */
     private $prenom;
 
@@ -34,6 +38,9 @@ class Billets
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\Date(
+     *     message = "Ce n\'est pas une date de naissance valide.",
+     * )
      */
     private $date_de_naissance;
 
@@ -42,6 +49,12 @@ class Billets
      * @ORM\JoinColumn(nullable=false)
      */
     private $reservation;
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     * @Assert\NotBlank
+     */
+    private $Pays;
 
 
     public function getId(): int
@@ -97,14 +110,26 @@ class Billets
         return $this;
     }
 
-    public function getReservation(): ?Reservations
+    public function getReservation(): Reservations
     {
         return $this->reservation;
     }
 
-    public function setReservation(?Reservations $reservation): self
+    public function setReservation(Reservations $reservation): self
     {
         $this->reservation = $reservation;
+
+        return $this;
+    }
+
+    public function getPays(): string
+    {
+        return $this->Pays;
+    }
+
+    public function setPays(string $Pays): self
+    {
+        $this->Pays = $Pays;
 
         return $this;
     }
