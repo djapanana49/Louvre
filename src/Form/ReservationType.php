@@ -12,6 +12,7 @@ use App\Form\BilletsType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ReservationType extends AbstractType
 {
@@ -31,11 +32,15 @@ class ReservationType extends AbstractType
                 ))
                 ->add('mail')
                 ->add('billets', CollectionType::class, array(
-        'entry_type'   => BilletsType::class,
-        'allow_add'    => true,
-        'allow_delete' => true
-      ))
-        ;
+                    'entry_type'   => BilletsType::class,
+                    'allow_add'    => true,
+                    'allow_delete' => true,
+                    'prototype' => true,
+                    'by_reference' => false,
+                    
+                ))
+               ;
+        
     }
 
     public function configureOptions(OptionsResolver $resolver)

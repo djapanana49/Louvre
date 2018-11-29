@@ -63,7 +63,7 @@ class Reservations
     private $mail;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Billets", mappedBy="reservation")
+     * @ORM\OneToMany(targetEntity="App\Entity\Billets", mappedBy="reservation",cascade={"persist"})
      */
     private $billets;
 

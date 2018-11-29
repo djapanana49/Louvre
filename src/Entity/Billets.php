@@ -20,7 +20,7 @@ class Billets
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Assert\NotBlank
+     * 
      */
     private $nom;
 
@@ -46,7 +46,7 @@ class Billets
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Reservations", inversedBy="billets")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(name="reservation_id", referencedColumnName="id")
      */
     private $reservation;
 
@@ -62,19 +62,19 @@ class Billets
         return $this->id;
     }
 
-    public function getNom(): string
+    public function getNom()
     {
         return $this->nom;
     }
 
-    public function setNom(string $nom): self
+    public function setNom(string $nom)
     {
         $this->nom = $nom;
 
         return $this;
     }
 
-    public function getPrenom(): string
+    public function getPrenom()
     {
         return $this->prenom;
     }
@@ -98,7 +98,7 @@ class Billets
         return $this;
     }
 
-    public function getDateDeNaissance(): \DateTimeInterface
+    public function getDateDeNaissance()
     {
         return $this->date_de_naissance;
     }
@@ -122,7 +122,7 @@ class Billets
         return $this;
     }
 
-    public function getPays(): string
+    public function getPays()
     {
         return $this->Pays;
     }

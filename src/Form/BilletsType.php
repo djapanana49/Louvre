@@ -24,7 +24,10 @@ class BilletsType extends AbstractType
                         'placeholder'=> 'JJ/MM/AAAA',)
                 ))
             ->add('Pays',TextType::class)
-            ->add('tarif_reduit', CheckboxType::class)
+            ->add('tarif', HiddenType::class
+                    
+                )
+                
         ;
     }
 
