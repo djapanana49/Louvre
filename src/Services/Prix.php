@@ -15,29 +15,30 @@ use App\Entity\Billets;
 
 class Prix{
  
-    function findPrice(Tarifs $tarifs, Billets $billets){
+    private function findPrice(Tarifs $tarifs, Billets $billets){
         
-        $date = new Date("02/10/1969");
+        $date = new Date($billets->getDateDeNaissance());
         $date2=new Date("now");
         $date->format('d/m/Y');
         $date2->format('d/m/Y');
        $interval=  $date->diff($date2);
        $age= (int)$interval->y;
        if($age >=12){
-       $tarifs->type_tarifs("Normal");
+       $prix=$tarifs->get_id(2);
+       return $prix;
        
        }
-        else if ($age>=60)
-        $tarifs->type_tarifs("Séniors");
-        
-        else if(($age>=4) &&($age <12))
-         $tarifs->type_tarifs("Enfants");   
-        
-        
-    }
+        else if ($age>=60){
+         $prix=$tarifs->get_id(4);
+        return $prix;
+        }
+        else if(($age>=4) &&($age <12)){
+          $prix=$tarifs->get_id(3); 
+        return $prix;
+        }
        
     
-  
+    }
  
     
 }

@@ -10,6 +10,7 @@ use App\Form\ReservationType;
 use App\Entity\Reservations;
 use Symfony\Component\HttpFoundation\Request;
 use DateTimeZone;
+use App\Services\Prix;
 
 class LouvreController extends AbstractController
 {
@@ -27,6 +28,7 @@ class LouvreController extends AbstractController
      */
     public function accueil()
     {
+        $prix=new Tarifs();
         $prix=$this->getDoctrine()->getRepository(Tarifs::class)->findAll();
         return $this->render('louvre/accueil.html.twig', array(
             'prix' => $prix)
@@ -40,42 +42,28 @@ class LouvreController extends AbstractController
 {
     
     $reservation = new Reservations();
+    $billet=new Billets();
+    $tarifs= new Tarifs();
     $reservation->setDateReservation(new \DateTime('now',new DateTimeZone('Europe/Paris')));
     $reservation->setDateVisite(new \DateTime('now',new DateTimeZone('Europe/Paris')));
     $reservation->setNumReservation(uniqid(). time());
     $form = $this->createForm(ReservationType::class, $reservation);
      if ($request->isMethod('POST')) {
     $form->handleRequest($request);
-    function findPrice(Tarifs $tarifs, Billets $billets){
-        
-        $date = new Date($billets->getDateDeNaissance());
-        $date2=new Date("now");
-        $date->format('d/m/Y');
-        $date2->format('d/m/Y');
-       $interval=  $date->diff($date2);
-       $age= (int)$interval->y;
-       if($age >=12){
-       $tarifs->type_tarifs("Normal");
-       
-       }
-        else if ($age>=60)
-        $tarifs->type_tarifs("Séniors");
-        
-        else if(($age>=4) &&($age <12))
-         $tarifs->type_tarifs("Enfants");   
-        
+    
         
     }
     if ($form->isSubmitted() && $form->isValid()) {
         $entityManager = $this->getDoctrine()->getManager();
+        $billet->setTarif($this->findPrice($tarifs,$billet));
         $entityManager->persist($reservation);
         $entityManager->flush();
 
         return $this->redirectToRoute('accueil');
     }
-     }
+     
     return $this->render('louvre/reservation.html.twig',[
-        'formReservation'=>$form->createView()
+        'formReservation'=>$form->createView(),
     ]);
     // ...
 }

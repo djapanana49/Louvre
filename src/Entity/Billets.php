@@ -86,7 +86,7 @@ class Billets
         return $this;
     }
 
-    public function getTarif(): Tarifs
+    public function getTarif()
     {
         return $this->tarif;
     }

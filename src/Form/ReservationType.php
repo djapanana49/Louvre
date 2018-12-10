@@ -30,7 +30,6 @@ class ReservationType extends AbstractType
                 ->add('nb_billets',IntegerType::class,array(
                         'data' => '1',
                 ))
-                ->add('mail')
                 ->add('billets', CollectionType::class, array(
                     'entry_type'   => BilletsType::class,
                     'allow_add'    => true,
