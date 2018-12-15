@@ -6,7 +6,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\Constraints as ReservationAssert;
+use App\Validator\Journee;
+use App\Validator\JoursFermes;
+use DateTimeZone;
 
 
 /**
@@ -29,13 +31,15 @@ class Reservations
     /**
      * @ORM\Column(type="datetime")
      * @Assert\DateTime
+     * @Assert\GreaterThanOrEqual("today",
+     * message="Les réservations pour des dates passées sont interdites ")
+     * @JoursFermes
      */
     private $date_visite;
 
     /**
      * @ORM\Column(type="datetime")
      * @Assert\DateTime
-     * @ReservationAssert\Journee
      */
     private $date_reservation;
 
@@ -66,12 +70,15 @@ class Reservations
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Billets", mappedBy="reservation",cascade={"persist"})
+     * 
      */
     private $billets;
 
     public function __construct()
     {
         $this->billets = new ArrayCollection();
+        $this->setDateReservation(new \DateTime('now',new DateTimeZone('Europe/Paris')));
+        $this->setNumReservation(uniqid(). time());
     }
 
     public function getId(): int

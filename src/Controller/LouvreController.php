@@ -9,7 +9,7 @@ use App\Entity\Billets;
 use App\Form\ReservationType;
 use App\Entity\Reservations;
 use Symfony\Component\HttpFoundation\Request;
-use DateTimeZone;
+
 use App\Services\Prix;
 
 class LouvreController extends AbstractController
@@ -42,11 +42,9 @@ class LouvreController extends AbstractController
 {
     
     $reservation = new Reservations();
-    $billet=new Billets();
-    $tarifs= new Tarifs();
-    $reservation->setDateReservation(new \DateTime('now',new DateTimeZone('Europe/Paris')));
-    $reservation->setDateVisite(new \DateTime('now',new DateTimeZone('Europe/Paris')));
-    $reservation->setNumReservation(uniqid(). time());
+   /* $billet=new Billets();
+    $tarifs= new Tarifs();*/
+    
     $form = $this->createForm(ReservationType::class, $reservation);
      if ($request->isMethod('POST')) {
     $form->handleRequest($request);
@@ -54,17 +52,26 @@ class LouvreController extends AbstractController
         
     }
     if ($form->isSubmitted() && $form->isValid()) {
-        $entityManager = $this->getDoctrine()->getManager();
+       /* $entityManager = $this->getDoctrine()->getManager();
         $billet->setTarif($this->findPrice($tarifs,$billet));
         $entityManager->persist($reservation);
-        $entityManager->flush();
+        $entityManager->flush();*/
 
-        return $this->redirectToRoute('accueil');
+        return $this->redirectToRoute('recapitulatif');
     }
      
     return $this->render('louvre/reservation.html.twig',[
         'formReservation'=>$form->createView(),
     ]);
     // ...
+}
+
+/**
+     * @Route("/recapitulatif", name="recapitulatif")
+     */
+    public function Recap(Request $request)
+{
+         return $this->render('louvre/recapitulatif.html.twig');
+        
 }
 }

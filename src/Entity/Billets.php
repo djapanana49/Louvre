@@ -52,7 +52,7 @@ class Billets
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Assert\NotBlank
+     * @Assert\Choice({"France", "Belgique", "Suisse", "Luxembourg"})
      */
     private $Pays;
 
