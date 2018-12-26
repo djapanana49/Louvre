@@ -2,15 +2,16 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\Reservations;
 use App\Entity\Tarifs;
 use App\Entity\Billets;
 use App\Form\ReservationType;
-use App\Entity\Reservations;
-use Symfony\Component\HttpFoundation\Request;
-
 use App\Services\Prix;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Session\Session;
+
 
 class LouvreController extends AbstractController
 {
@@ -38,13 +39,12 @@ class LouvreController extends AbstractController
     /**
      * @Route("/reservation", name="reservation")
      */
-    public function newReservation(Request $request)
+    public function newReservation(Request $request, Prix $prix_billet)
 {
     
     $reservation = new Reservations();
-   /* $billet=new Billets();
-    $tarifs= new Tarifs();*/
-    
+    $session = new Session();
+   
     $form = $this->createForm(ReservationType::class, $reservation);
      if ($request->isMethod('POST')) {
     $form->handleRequest($request);
@@ -52,10 +52,19 @@ class LouvreController extends AbstractController
         
     }
     if ($form->isSubmitted() && $form->isValid()) {
-       /* $entityManager = $this->getDoctrine()->getManager();
-        $billet->setTarif($this->findPrice($tarifs,$billet));
-        $entityManager->persist($reservation);
+      
+        /*$entityManager->persist($reservation);
         $entityManager->flush();*/
+      
+     $prix= $prix_billet->findPrice($reservation);
+     /* echo'<pre>';
+      var_dump($reservation);die;
+     echo'</pre>';*/
+    if ($request->hasSession() && ($session = $request->getSession())) {
+    $session->set('session_billets', $reservation);
+    $session->getFlashBag()->add('notice', 'Demande de billet(s) envoyée');
+
+}
 
         return $this->redirectToRoute('recapitulatif');
     }
@@ -71,7 +80,18 @@ class LouvreController extends AbstractController
      */
     public function Recap(Request $request)
 {
-         return $this->render('louvre/recapitulatif.html.twig');
+        $reservation = new Reservations();
+        $session = new Session();
+        $reservation=$session->get('session_billets');
+        $billets=$reservation->getBillets();
+        $form = $this->createForm(ReservationType::class, $reservation);
+        if ($request->isMethod('POST')) {
+        $form->handleRequest($request);}
+         return $this->render('louvre/recapitulatif.html.twig',[
+        'recap'=>$reservation,
+        'billets'=>$billets,
+        'formReservation'=>$form->createView(),
+    ]);
         
 }
 }

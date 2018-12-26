@@ -12,4 +12,20 @@
     <div class="example-wrapper">
         <h1>Récapitulatif de votre réservation !</h1>
         <br><br>
+        <h2> Vous avez réservé le(s) billet(s) suivant(s):</h2><br>
+        {% if app.session %}
+            <h3> Numéro de réservation: {{recap.getNumReservation}}</h3>
+            <h3> Date de votre visite: {{ recap.getDateVisite|date("d/m/Y") }}</h3>
+            <h3> Nombre de billet(s): {{ recap.getNbBillets }}</h3>
+            <h3>Billets: {% for billet in billets %}
+            
+                Nom: {{ billet.getNom }}<br>
+                Prenom: {{ billet.getPrenom }}<br>
+                Date de naissance: {{ billet.DateDeNaissance|date("d/m/Y") }}<br>
+                {% endfor %}
+            
+            </h3>
+            
+        {% endif %}
+           
  {% endblock %}   

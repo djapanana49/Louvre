@@ -22,8 +22,18 @@ class TarifsRepository extends ServiceEntityRepository
     // /**
     //  * @return Tarifs[] Returns an array of Tarifs objects
     //  */
-    /*
-    public function findByExampleField($value)
+    
+    
+     public function findPriceId($value):Tarifs
+    {
+        return $this->createQueryBuilder('t')
+            ->andWhere('t.id = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+   /*  public function findByExampleField($value)
     {
         return $this->createQueryBuilder('t')
             ->andWhere('t.exampleField = :val')
@@ -45,6 +55,6 @@ class TarifsRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult()
         ;
-    }
-    */
+    }*/
+    
 }

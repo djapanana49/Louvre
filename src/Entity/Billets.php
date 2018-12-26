@@ -43,6 +43,12 @@ class Billets
      * )
      */
     private $date_de_naissance;
+    
+     /**
+     * @ORM\Column(type="string", length=100)
+     * 
+     */
+    private $Pays;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Reservations", inversedBy="billets")
@@ -50,11 +56,7 @@ class Billets
      */
     private $reservation;
 
-    /**
-     * @ORM\Column(type="string", length=100)
-     * @Assert\Choice({"France", "Belgique", "Suisse", "Luxembourg"})
-     */
-    private $Pays;
+   
 
 
     public function getId(): int
