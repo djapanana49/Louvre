@@ -4,7 +4,7 @@
 {% form_theme formReservation 'bootstrap_4_layout.html.twig' %}
 
 {% block body %}
-  
+
     <style>
         .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
         .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
@@ -16,121 +16,69 @@
         {{ form_start(formReservation,{'attr':{
             'id':'reservation'}
             }) }}
-       {# {{ form_row(formReservation.date_reservation,{
-            'label':'Date de réservation'}) }}#}
-       <fieldset>
-           <legend>Choisissez la date de votre visite</legend>
-       {{ form_row(formReservation.date_visite,{
-            'label':'Date de votre visite'})}}
-       </fieldset>
-       <br>
+        {# {{ form_row(formReservation.date_reservation,{
+             'label':'Date de réservation'}) }}#}
         <fieldset>
-                <legend>Sélectionnez un type de billet</legend>
-
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" id="journee"
-                           name="choix" value="journee" checked />
-                    <label class="form-check-label" for="journee">Journée</label>
-                </div>
-
-                <div class="form-check">
-                    <input class="form-check-input" type="radio" id="demi-journee"
-                           name="choix" value="demi-journee" />
-                    <label class="form-check-label" for="demi-journee">Demi-journée</label>
-                </div>
-            </fieldset>
+            <legend>Choisissez la date de votre visite</legend>
+            {{ form_row(formReservation.date_visite,{
+            'label':'Date de votre visite'})}}
+        </fieldset>
         <br>
-        
+        <fieldset>
+            <legend>Sélectionnez un type de billet</legend>
+
+            <div class="form-check">
+                <input class="form-check-input" type="radio" id="journee"
+                       name="choix" value="journee" checked />
+                <label class="form-check-label" for="journee">Journée</label>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="radio" id="demi-journee"
+                       name="choix" value="demi-journee" />
+                <label class="form-check-label" for="demi-journee">Demi-journée</label>
+            </div>
+        </fieldset>
+        <br>
+
         {# {{ form_row(formReservation.mail,{
             'label':'Adresse mail','attr':{
             'placeholder':'Votre adresse mail'}
             } )}}#}
-           
-            <br><br>
-            <hr>
+
+        <br><br>
+        <hr>
 
         {{ form_row(formReservation.nb_billets,{
             'label':'Nombre de billets:','attr':{
             'placeholder':'Choisissez un nombre de billets',
             'name':'nb_billets',}
             } )}}
-         {{ form_row(formReservation.billets) }}
-  
-         
-	<input type="button" id="ajout" name="ajout" value="Ajouter billets" class="btn btn-info">
-	<input type="button" id="initialisation" name="initialisation" value="Réinitialiser" class="btn btn-warning">
-	<input type="submit" id="envoyer" name="envoyer" value="Envoyer" class="btn btn-success">
-	
+
+        {{ form_row(formReservation.billets) }}
+
+
+        <input type="button" id="ajout" name="ajout[]" value="Ajouter billets" class="btn btn-info">
+        <input type="submit" id="envoyer" name="envoyer" value="Envoyer" class="btn btn-success">
+
         {{ form_end(formReservation) }}
         {% block javascripts %}
-<script language="Javascript">
-    
-  /*  var $collectionHolder;
-   var $addBillets;
-   var index = $('#nb_billets').value;
+            <script language="Javascript">
+  document.querySelector("#ajout").addEventListener('click', function () {
 
-$(document).ready(function() {
-    // Get the ul that holds the collection of tags
-    $collectionHolder = $('#reservation_billets');
-    $addBillets=$('#ajout');
-    
+     var billet = document.querySelector("#reservation_billets");
+     var prototype = billet.dataset.prototype;
+     var index = document.getElementById("reservation_nb_billets");
 
-    // count the current form inputs we have (e.g. 2), use that as the new
-    // index when inserting a new item (e.g. 2)
-    $collectionHolder.data('index', $collectionHolder.find(':input').length);
+     for (var i = 0; i < index.value; i++) {
+       var ligne = i + 1;
+       billet.innerHTML += prototype.replace(/__name__label__/g, 'Billet n°' + ligne).replace(/__name__/g, ligne);
 
-    $addBillets.on('click', function(e) {
-        // add a new tag form (see next code block)
-        addBilletsForm($collectionHolder, $addBillets);
-    });
-});
-
-function addBilletsForm($collectionHolder, $addBillets) {
-    // Get the data-prototype explained earlier
-    var prototype = $collectionHolder.data('prototype');
-
-    // get the new index
-    
-
-    var newForm = prototype;
-    // You need this only if you didn't set 'label' => false in your tags field in TaskType
-    // Replace '__name__label__' in the prototype's HTML to
-    // instead be a number based on how many items we have
-    // newForm = newForm.replace(/__name__label__/g, index);
-
-    // Replace '__name__' in the prototype's HTML to
-    // instead be a number based on how many items we have
-    newForm = newForm.replace(/__name__/g, 'Billet n°'+index);
-
-    // increase the index with one for the next item
-    $collectionHolder.data('index', index + 1);
-
-    // Display the form in the page in an li, before the "Add a tag" link li
-    var $newFormLi = $('#reservation_billets').append(newForm);
-    $addBillets.before($newFormLi);
-}*/
-  
-  document.querySelector("#ajout").addEventListener('click', function() {
-            
-                var billet = document.querySelector("#reservation_billets");
-                var prototype = billet.dataset.prototype;
-                var index=document.getElementById("reservation_nb_billets");
-                
-                for(var i=0;i<index.value;i++){
+     }
                     
-                billet.innerHTML +=prototype.replace(/__name__label__/g, 'Billet n°'+(i+1));
-               
-                    }
-              // event.preventDefault();
-              }
-            
-            );
-    document.querySelector("#initialisation").addEventListener('click', function() {
-        document.querySelector("#reservation").reset();
-    
-       
     }
-    );
-</script>
+ );
+  
+            </script>
         {% endblock %}   
-{% endblock %}
+    {% endblock %}
