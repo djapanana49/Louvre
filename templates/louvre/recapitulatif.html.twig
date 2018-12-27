@@ -1,7 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Page de réservation{% endblock %}
-
+{% block head%}
+<ol class="breadcrumb">
+  <li class="breadcrumb-item"><a href="#">Accueil</a></li>
+  <li class="breadcrumb-item"><a href="#">Reservations</a></li>
+  <li class="breadcrumb-item active">Paiement</li>
+</ol>
+{%endblock%}
 {% block body %}
   
     <style>
@@ -14,18 +20,27 @@
         <br><br>
         <h2> Vous avez réservé le(s) billet(s) suivant(s):</h2><br>
         {% if app.session %}
+           {% set total = 0 %}
             <h3> Numéro de réservation: {{recap.getNumReservation}}</h3>
             <h3> Date de votre visite: {{ recap.getDateVisite|date("d/m/Y") }}</h3>
             <h3> Nombre de billet(s): {{ recap.getNbBillets }}</h3>
-            <h3>Billets: {% for billet in billets %}
+            <h3>Billets: <br>{% for billet in billets %}
             
                 Nom: {{ billet.getNom }}<br>
                 Prenom: {{ billet.getPrenom }}<br>
                 Date de naissance: {{ billet.DateDeNaissance|date("d/m/Y") }}<br>
+                Prix: {{billet.getTarif}} € <br>
+                {% set total = total + billet.getTarif %}
+                  <br> 
+                <hr>
                 {% endfor %}
-            
+                
+            Total de votre commande : {{total}}€  <br>  
             </h3>
-            
+            <br>
         {% endif %}
-           
+           Votre adresse mail pour recevoir votre confirmation: <input type="email" class="form-control" id="email" aria-describedby="emailHelp"placeholder="Entrez votre adresse mail svp" name="email"/><br><br>
+           {% set email = recap.getMail %}
+          <input type="submit" id="envoyer" name="envoyer" value="Envoyer" class="btn btn-success">
+          
  {% endblock %}   

@@ -55,11 +55,12 @@ class LouvreController extends AbstractController
       
         /*$entityManager->persist($reservation);
         $entityManager->flush();*/
-      
+    $billets=$reservation->getBillets();
+    
      $prix= $prix_billet->findPrice($reservation);
-     /* echo'<pre>';
+     /*echo'<pre>';
       var_dump($reservation);die;
-     echo'</pre>';*/
+     echo'</pre>';die;*/
     if ($request->hasSession() && ($session = $request->getSession())) {
     $session->set('session_billets', $reservation);
     $session->getFlashBag()->add('notice', 'Demande de billet(s) envoyée');

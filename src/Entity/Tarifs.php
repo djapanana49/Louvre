@@ -28,15 +28,7 @@ class Tarifs
      */
     private $tarif;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Billets", mappedBy="tarif")
-     */
-    private $billets;
 
-    public function __construct()
-    {
-        $this->billets = new ArrayCollection();
-    }
 
 public function getId()
     {

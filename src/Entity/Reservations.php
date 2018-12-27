@@ -74,6 +74,11 @@ class Reservations
      */
     private $billets;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $journee;
+
     public function __construct()
     {
         $this->billets = new ArrayCollection();
@@ -173,6 +178,18 @@ class Reservations
                 $billet->setReservation(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getJournee(): ?bool
+    {
+        return $this->journee;
+    }
+
+    public function setJournee(bool $journee): self
+    {
+        $this->journee = $journee;
 
         return $this;
     }

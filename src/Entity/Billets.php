@@ -31,8 +31,11 @@ class Billets
     private $prenom;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Tarifs", inversedBy="billets")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="integer")
+     * @Assert\Type(
+     *     type="integer",
+     *     message="La valeur {{ value }} n'est pas une valeur valide {{ type }}."
+     * )
      */
     private $tarif;
 
@@ -55,6 +58,11 @@ class Billets
      * @ORM\JoinColumn(name="reservation_id", referencedColumnName="id")
      */
     private $reservation;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $reduit;
 
    
 
@@ -93,7 +101,7 @@ class Billets
         return $this->tarif;
     }
 
-    public function setTarif(Tarifs $tarif): self
+    public function setTarifs(int $tarif): self
     {
         $this->tarif = $tarif;
 
@@ -132,6 +140,18 @@ class Billets
     public function setPays(string $Pays): self
     {
         $this->Pays = $Pays;
+
+        return $this;
+    }
+
+    public function getReduit(): ?bool
+    {
+        return $this->reduit;
+    }
+
+    public function setReduit(bool $reduit): self
+    {
+        $this->reduit = $reduit;
 
         return $this;
     }

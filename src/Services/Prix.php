@@ -18,32 +18,33 @@ class Prix extends AbstractController {
 
     public function findPrice(Reservations $reservations) {
 
-       
+
         $repository = $this->getDoctrine()->getRepository(Tarifs::class);
         $billets = $reservations->getBillets();
+        $nb=$reservations->getNbBillets();
 
-        foreach ($billets as $billet) {
+        foreach($billets as $billet) {
 
-           
+           var_dump('date :',$billet->getDateDeNaissance());
             $date = $billet->getDateDeNaissance();
             $date2 = new DateTime("now");
             $date->format('d/m/Y');
             $date2->format('d/m/Y');
             $interval = $date->diff($date2);
             $age = (int) $interval->y;
- 
+
             if ($age >= 12) {
-                $tarifs = $repository->findPriceId(2);
-                $prix = $billet->setTarif($tarifs);
-                return $prix;
+
+                $prix = $billet->setTarif(16);
+
             } else if ($age >= 60) {
-                $tarifs = $repository->findPriceId(4);
-                $prix = $billet->setTarif($tarifs);
-                return $prix;
+
+                $prix = $billet->setTarif(12);
+
             } else if (($age >= 4) && ($age < 12)) {
-                $tarifs = $repository->findPriceId(3);
-                $prix = $billet->setTarif($tarifs);
-                return $prix;
+
+                $prix = $billet->setTarif(8);
+
             }
         }
     }
