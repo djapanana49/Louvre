@@ -56,7 +56,9 @@ class LouvreController extends AbstractController
         /*$entityManager->persist($reservation);
         $entityManager->flush();*/
     $billets=$reservation->getBillets();
-    
+     /*echo'<pre>';
+      var_dump($reservation);die;
+     echo'</pre>';die;*/
      $prix= $prix_billet->findPrice($reservation);
      /*echo'<pre>';
       var_dump($reservation);die;

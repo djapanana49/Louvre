@@ -101,7 +101,7 @@ class Billets
         return $this->tarif;
     }
 
-    public function setTarifs(int $tarif): self
+    public function setTarif(int $tarif): self
     {
         $this->tarif = $tarif;
 
@@ -144,7 +144,7 @@ class Billets
         return $this;
     }
 
-    public function getReduit(): ?bool
+    public function getReduit(): bool
     {
         return $this->reduit;
     }

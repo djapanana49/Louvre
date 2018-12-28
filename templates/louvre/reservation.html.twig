@@ -33,15 +33,9 @@
             <legend>Sélectionnez un type de billet</legend>
 
             <div class="form-check">
-                <input class="form-check-input" type="radio" id="journee"
-                       name="choix" value="journee" checked />
-                <label class="form-check-label" for="journee">Journée</label>
-            </div>
-
-            <div class="form-check">
-                <input class="form-check-input" type="radio" id="demi-journee"
-                       name="choix" value="demi-journee" />
-                <label class="form-check-label" for="demi-journee">Demi-journée</label>
+                {{ form_row(formReservation.journee,{
+            'label':'Type de billets',
+            'attr':{'type':'radio',}})}}
             </div>
         </fieldset>
         <br>

@@ -4,11 +4,12 @@ namespace App\Form;
 
 use App\Entity\Billets;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class BilletsType extends AbstractType
 {
@@ -25,7 +26,10 @@ class BilletsType extends AbstractType
                 ))
             ->add('Pays',TextType::class)
             ->add('tarif', HiddenType::class)
-            ->add('reduit', ChoiceType::class),
+            ->add('reduit', CheckboxType::class, array(
+                    'label'    => 'Bénéficiez-vous d\'une réduction ?',
+                    'required' => false,
+                     'value' => true,))
                 
         ;
     }

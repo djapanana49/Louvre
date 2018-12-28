@@ -3,16 +3,15 @@
 namespace App\Form;
 
 use App\Entity\Reservations;
+use App\Form\BilletsType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
-use App\Form\BilletsType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class ReservationType extends AbstractType
 {
@@ -30,6 +29,12 @@ class ReservationType extends AbstractType
                 ->add('nb_billets',IntegerType::class,array(
                         'data' => '1',
                 ))
+                ->add('journee',ChoiceType::class, array(
+                    'choices' => array(
+                        'Journée'=>true,
+                        'Demi-journée'=>false),
+                    'expanded' => true,
+                    ))
                 ->add('billets', CollectionType::class, array(
                     'entry_type'   => BilletsType::class,
                     'allow_add'    => true,
