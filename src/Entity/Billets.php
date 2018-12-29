@@ -20,13 +20,13 @@ class Billets
 
     /**
      * @ORM\Column(type="string", length=100)
-     * 
+     * @Assert\NotNull
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=100)
-     * @Assert\NotBlank
+     * @Assert\NotNull
      */
     private $prenom;
 

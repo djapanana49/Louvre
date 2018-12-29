@@ -19,9 +19,9 @@ class JoursFermesValidator extends ConstraintValidator {
         $jours = (easter_days($annee));
         $datedeb = new DateTime('21-03-' . $annee);
         $paques = $datedeb->add(new DateInterval('P' . $jours . 'D'));
-        $LundiPaques = new Datetime($paques->format('m/d') . '+1 day', new DateTimeZone('Europe/Paris'));
-        $ascension = new Datetime($paques->format('m/d') . '+39 day', new DateTimeZone('Europe/Paris'));
-        $pentecote = new Datetime($paques->format('m/d') . '+50 day', new DateTimeZone('Europe/Paris'));
+        $LundiPaques = new Datetime($paques->format('m/d') . '+1 day');
+        $ascension = new Datetime($paques->format('m/d') . '+39 day');
+        $pentecote = new Datetime($paques->format('m/d') . '+50 day');
 
         $a = array("25/12", "01/01", "01/05", "08/05", "14/07", "15/08", "01/11", "11/11", $paques->format('d/m'), $LundiPaques->format('d/m'), $ascension->format('d/m'), $pentecote->format('d/m'));
 

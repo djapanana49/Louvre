@@ -34,6 +34,7 @@ class ReservationType extends AbstractType
                         'Journée'=>true,
                         'Demi-journée'=>false),
                     'expanded' => true,
+                    'data' => true,
                     ))
                 ->add('billets', CollectionType::class, array(
                     'entry_type'   => BilletsType::class,

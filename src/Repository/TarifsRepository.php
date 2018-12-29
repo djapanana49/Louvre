@@ -24,15 +24,6 @@ class TarifsRepository extends ServiceEntityRepository
     //  */
     
     
-     public function findPriceId($value):Tarifs
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.id = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
    /*  public function findByExampleField($value)
     {
         return $this->createQueryBuilder('t')

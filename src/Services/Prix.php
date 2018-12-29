@@ -30,33 +30,33 @@ class Prix  {
                     }
                
                     else if ($age >= 12) {
-                        $prix = $billet->setTarif(16);
+                        $billet->setTarif(16);
                     } else if ($age >= 60) {
-                        $prix = $billet->setTarif(12);
+                        $billet->setTarif(12);
                     } else if (($age >= 4) && ($age < 12)) {
-                        $prix = $billet->setTarif(8);
+                        $billet->setTarif(8);
                     }
                     else if (($age == 0) && ($age < 4)) {
-                        $prix = $billet->setTarif(0);
+                        $billet->setTarif(0);
                     }
                     break;
                     case false:
                         if ($billet->getReduit()==true){
-                        $prix=$billet->setTarif(5);
+                        $billet->setTarif(5);
                     }
                
                     else if ($age >= 12) {
-                        $prix = $billet->setTarif(8);
+                        $billet->setTarif(8);
                     } else if ($age >= 60) {
-                        $prix = $billet->setTarif(6);
+                        $billet->setTarif(6);
                     } else if (($age >= 4) && ($age < 12)) {
-                        $prix = $billet->setTarif(4);
+                        $billet->setTarif(4);
                     }
                     else if (($age == 0) && ($age < 4)) {
-                        $prix = $billet->setTarif(0);
+                        $billet->setTarif(0);
                     }
                     break;
-                    default: echo'Veuillez choisir une option svp';
+                    default: echo'Veuillez choisir une option svp';break;
         }
      }
     }

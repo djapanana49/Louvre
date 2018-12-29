@@ -19,6 +19,7 @@
         <h1>Récapitulatif de votre réservation !</h1>
         <br><br>
         <h2> Vous avez réservé le(s) billet(s) suivant(s):</h2><br>
+        
         {% if app.session %}
            {% set total = 0 %}
             <h3> Numéro de réservation: {{recap.getNumReservation}}</h3>
@@ -35,12 +36,111 @@
                 <hr>
                 {% endfor %}
                 
-            Total de votre commande : {{total}}€  <br>  
+            
             </h3>
             <br>
         {% endif %}
+         <form action='{{ path('payment') }}' method="post" id="payment-form"> 
+          Total de votre commande : <input type="text" class="form-control" id="total" value= '{{total}}' name="total" /> €<br>  
            Votre adresse mail pour recevoir votre confirmation: <input type="email" class="form-control" id="email" aria-describedby="emailHelp"placeholder="Entrez votre adresse mail svp" name="email"/><br><br>
-           {% set email = recap.getMail %}
-          <input type="submit" id="envoyer" name="envoyer" value="Envoyer" class="btn btn-success">
-          
+                 
+                <div class="form">
+                  <label for="card-element">
+                    Credit or debit card
+                  </label>
+                  <div id="card-element">
+                    <!-- A Stripe Element will be inserted here. -->
+                  </div>
+
+                  <!-- Used to display form errors. -->
+                  <div id="card-errors" role="alert"></div>
+                </div><br>
+
+                <button class="btn btn-primary">Soumettez votre paiement</button>
+          </form>
+          {% block javascripts%}
+          <script language="Javascript">
+          // Create a Stripe client.
+          var stripe = Stripe('pk_test_o4ePVNna28gVjSTYz4z8urjZ');
+
+          // Create an instance of Elements.
+          var elements = stripe.elements();
+          var paymentRequest = stripe.paymentRequest({
+          country: 'FR',
+          currency: 'eur',
+          total: {
+          label: 'Demo total',
+          amount: 1000,
+            },
+            requestPayerName: true,
+            requestPayerEmail: true,
+          });
+
+          // Custom styling can be passed to options when creating an Element.
+          // (Note that this demo uses a wider set of styles than the guide below.)
+          var style = {
+            base: {
+              color: '#32325d',
+              lineHeight: '28px',
+              fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+              fontSmoothing: 'antialiased',
+              fontSize: '30px',
+              '::placeholder': {
+                color: '#aab7c4'
+              }
+            },
+            invalid: {
+              color: 'red',
+              iconColor: '#fa755a'
+            }
+          };
+
+          // Create an instance of the card Element.
+          var card = elements.create('card', {style: style});
+
+          // Add an instance of the card Element into the `card-element` <div>.
+          card.mount('#card-element');
+
+          // Handle real-time validation errors from the card Element.
+          card.addEventListener('change', function(event) {
+            var displayError = document.getElementById('card-errors');
+            if (event.error) {
+              displayError.textContent = event.error.message;
+            } else {
+              displayError.textContent = '';
+            }
+          });
+
+          // Handle form submission.
+          var form = document.getElementById('payment-form');
+          form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            stripe.createToken(card).then(function(result) {
+              if (result.error) {
+                // Inform the user if there was an error.
+                var errorElement = document.getElementById('card-errors');
+                errorElement.textContent = result.error.message;
+              } else {
+                // Send the token to your server.
+                stripeTokenHandler(result.token);
+              }
+            });
+          });
+
+          // Submit the form with the token ID.
+          function stripeTokenHandler(token) {
+            // Insert the token ID into the form so it gets submitted to the server
+            var form = document.getElementById('payment-form');
+            var hiddenInput = document.createElement('input');
+            hiddenInput.setAttribute('type', 'hidden');
+            hiddenInput.setAttribute('name', 'stripeToken');
+            hiddenInput.setAttribute('value', token.id);
+            form.appendChild(hiddenInput);
+
+            // Submit the form
+            form.submit();
+          }
+      </script>
+          {%endblock%}
  {% endblock %}   

@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class LouvreController extends AbstractController
@@ -44,6 +45,7 @@ class LouvreController extends AbstractController
     
     $reservation = new Reservations();
     $session = new Session();
+    $entityManager = $this->getDoctrine()->getManager();
    
     $form = $this->createForm(ReservationType::class, $reservation);
      if ($request->isMethod('POST')) {
@@ -53,48 +55,80 @@ class LouvreController extends AbstractController
     }
     if ($form->isSubmitted() && $form->isValid()) {
       
-        /*$entityManager->persist($reservation);
-        $entityManager->flush();*/
-    $billets=$reservation->getBillets();
-     /*echo'<pre>';
-      var_dump($reservation);die;
-     echo'</pre>';die;*/
-     $prix= $prix_billet->findPrice($reservation);
-     /*echo'<pre>';
-      var_dump($reservation);die;
-     echo'</pre>';die;*/
-    if ($request->hasSession() && ($session = $request->getSession())) {
-    $session->set('session_billets', $reservation);
-    $session->getFlashBag()->add('notice', 'Demande de billet(s) envoyée');
-
-}
-
+        
+        $billets=$reservation->getBillets();
+        $prix= $prix_billet->findPrice($reservation);
+        if ($request->hasSession() && ($session = $request->getSession())) {
+            $session->set('session_billets', $reservation);
+        }
+        $entityManager->persist($reservation); 
         return $this->redirectToRoute('recapitulatif');
-    }
+        }
      
-    return $this->render('louvre/reservation.html.twig',[
+        return $this->render('louvre/reservation.html.twig',[
         'formReservation'=>$form->createView(),
-    ]);
+        ]);
     // ...
 }
 
 /**
      * @Route("/recapitulatif", name="recapitulatif")
      */
-    public function Recap(Request $request)
-{
+    public function Recap(Request $request) {
         $reservation = new Reservations();
         $session = new Session();
         $reservation=$session->get('session_billets');
         $billets=$reservation->getBillets();
-        $form = $this->createForm(ReservationType::class, $reservation);
-        if ($request->isMethod('POST')) {
-        $form->handleRequest($request);}
          return $this->render('louvre/recapitulatif.html.twig',[
         'recap'=>$reservation,
-        'billets'=>$billets,
-        'formReservation'=>$form->createView(),
+        'billets'=>$billets,  
     ]);
         
+}
+    
+    /**
+     * @Route("/payment", name="payment")
+     */
+    public function payment(Request $request) { 
+       
+        $session = new Session();
+        $reservation = new Reservations();
+        $reservation=$session->get('session_billets');
+        $reservation->setMail($_POST['email']);
+        $entityManager = $this->getDoctrine()->getManager();
+   
+    $form = $this->createForm(ReservationType::class, $reservation);
+     if ($request->isMethod('POST')) {
+    $form->handleRequest($request);
+        
+    }
+    
+        
+        
+        // Recupérer le montant TTC pour le mettre dans le paiement stripe        
+        $prixTTC = $_POST['total'];
+        $prixTTC = $prixTTC*100; 
+        
+        $token = $_POST['stripeToken'];
+       
+        \Stripe\Stripe::setApiKey("sk_test_NMS8iaVWh2STD5FqTP9PCeZz");
+
+
+        // Token is created using Checkout or Elements!
+        // Get the payment token ID submitted by the form:
+        
+        $charge = \Stripe\Charge::create([
+            'amount' => $prixTTC,
+            'currency' => 'eur',
+            'description' => 'Paiement final',
+            'source' => $token,
+            'receipt_email'=>'djapanana@free.fr',
+        ]);
+        if ($form->isSubmitted() && $form->isValid()) {
+        $entityManager->persist($reservation);
+        $entityManager->flush();
+        }
+    
+    return $this->redirectToRoute('accueil');
 }
 }
