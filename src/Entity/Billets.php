@@ -144,7 +144,7 @@ class Billets
         return $this;
     }
 
-    public function getReduit(): bool
+    public function getReduit()
     {
         return $this->reduit;
     }

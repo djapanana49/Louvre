@@ -76,6 +76,7 @@ class Reservations
 
     /**
      * @ORM\Column(type="boolean")
+     *@Journee
      */
     private $journee;
 
