@@ -21,8 +21,7 @@
         {{ form_start(formReservation,{'attr':{
             'id':'reservation'}
             }) }}
-        {# {{ form_row(formReservation.date_reservation,{
-             'label':'Date de réservation'}) }}#}
+        
         <fieldset>
             <legend>Choisissez la date de votre visite</legend>
             {{ form_row(formReservation.date_visite,{
@@ -39,11 +38,6 @@
             </div>
         </fieldset>
         <br>
-
-        {# {{ form_row(formReservation.mail,{
-            'label':'Adresse mail','attr':{
-            'placeholder':'Votre adresse mail'}
-            } )}}#}
 
         <br><br>
         <hr>

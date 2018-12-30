@@ -4,6 +4,7 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
+ * Service pour calcul du prix
  */
 
 namespace App\Services;
@@ -17,14 +18,17 @@ class Prix  {
         
         $billets = $reservations->getBillets();
             foreach ($billets as $billet) {
-                $date = $billet->getDateDeNaissance();
+                $date = $billet->getDateDeNaissance();// récupération des dates de naissance
                 $date2 = new DateTime("now");
                 $date->format('d/m/Y');
                 $date2->format('d/m/Y');
-                $interval = $date->diff($date2);
+                $interval = $date->diff($date2);// calcul de l'âge
                 $age = (int) $interval->y;
-                switch($reservations->getJournee()){
+                
+                // billet journée ou demi-journée
+                switch($reservations->getJournee()){ 
                     case true:
+                // Tarif réduit ou pas 
                     if ($billet->getReduit()==true){
                         $prix=$billet->setTarif(10);
                     }
