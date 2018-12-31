@@ -4,14 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Reservations;
 use App\Entity\Tarifs;
-use App\Entity\Billets;
 use App\Form\ReservationType;
 use App\Services\Prix;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\Session;
-use Symfony\Component\HttpFoundation\Response;
+use App\Services\SendMail;
+
 
 
 class LouvreController extends AbstractController
@@ -123,7 +123,8 @@ class LouvreController extends AbstractController
 
         $entityManager->persist($reservation);
         $entityManager->flush();
-
+        
+        MailConfirmation(Sylvie,$reservation->getMail(),$mailer);
 
         return $this->redirectToRoute('accueil');
     }
