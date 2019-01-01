@@ -6,11 +6,14 @@ use App\Entity\Reservations;
 use App\Entity\Tarifs;
 use App\Form\ReservationType;
 use App\Services\Prix;
+use Stripe\Charge;
+use Stripe\Stripe;
+use Swift_Mailer;
+use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Session\Session;
-use App\Services\SendMail;
+use Symfony\Component\Routing\Annotation\Route;
 
 
 
@@ -90,14 +93,16 @@ class LouvreController extends AbstractController
     /**
      * @Route("/payment", name="payment")
      */
-    public function payment(Request $request) {
+    public function payment(Swift_Mailer $mailer) {
 
         $session = new Session();
 
         $reservation = $session->get('session_billets');
+        $mail = $_POST['email'];
+        $billets=$reservation->getBillets();
         
         //Insertion de l'email dans $reservation
-        $reservation->setMail($_POST['email']);
+        $reservation->setMail($mail);
         
         $entityManager = $this->getDoctrine()->getManager();
 
@@ -107,13 +112,13 @@ class LouvreController extends AbstractController
         // Récupérer le token de paiement
         $token = $_POST['stripeToken'];
 
-        \Stripe\Stripe::setApiKey("sk_test_NMS8iaVWh2STD5FqTP9PCeZz");
+        Stripe::setApiKey("sk_test_NMS8iaVWh2STD5FqTP9PCeZz");
 
 
         // Token is created using Checkout or Elements!
         // Get the payment token ID submitted by the form:
 
-        \Stripe\Charge::create([
+        Charge::create([
                     'amount' => $prixTTC,
                     'currency' => 'eur',
                     'description' => 'Paiement final',
@@ -124,7 +129,20 @@ class LouvreController extends AbstractController
         $entityManager->persist($reservation);
         $entityManager->flush();
         
-        MailConfirmation(Sylvie,$reservation->getMail(),$mailer);
+        $message = (new Swift_Message('Réservation de billet(s)'))
+        ->setFrom('sylvianna@free.fr')
+        ->setTo($mail)
+        ->setBody(
+            $this->renderView(
+                // templates/emails/confirmation.html.twig
+                'louvre/EmailsConfirmation.html.twig',[
+        'recap'=>$reservation,
+        'billets'=>$billets,  
+    ]),
+            
+            'text/html'
+        );
+         $mailer->send($message);
 
         return $this->redirectToRoute('accueil');
     }

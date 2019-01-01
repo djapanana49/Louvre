@@ -1,10 +1,30 @@
-{% extends 'base.html.twig' %}
-<h3>You did it! You registered!</h3>
 
-Hi {{ name }}! You're successfully registered.
+<h3>Confirmation de votre réservation</h3>
 
-{# example, assuming you have a route named "login" #}
-To login, go to: <a href="{{ url('acceuil') }}">...</a>.
+Bonjour,<br>
 
-Thanks!
+Nous vous confirmons les réservations suuivantes :<br>
+
+{% if app.session %}
+            {% set total = 0 %}
+            <h3> Numéro de réservation: {{recap.getNumReservation}}</h3>
+            <h3> Date de votre visite: {{ recap.getDateVisite|date("d/m/Y") }}</h3>
+            <h3> Nombre de billet(s): {{ recap.getNbBillets }}</h3>
+            <h3>Billets: <br>{% for billet in billets %}
+
+                Nom: {{ billet.getNom }}<br>
+                Prenom: {{ billet.getPrenom }}<br>
+                Date de naissance: {{ billet.DateDeNaissance|date("d/m/Y") }}<br>
+                Prix: {{billet.getTarif}} € <br>
+                {% set total = total + billet.getTarif %}
+                <br> 
+                <hr>
+                {% endfor %}
+
+                 Total de la réservation: {{ total }} €<br>
+                </h3>
+                <br>
+                {% endif %}
+
+A bientôt !
 
