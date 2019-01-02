@@ -15,32 +15,29 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 
+class LouvreController extends AbstractController {
 
-
-class LouvreController extends AbstractController
-{
     /**
      * @Route("/louvre", name="louvre")
      */
-    public function index()
-    {
+    public function index() {
         return $this->render('louvre/index.html.twig', [
-            'controller_name' => 'LouvreController',
+                    'controller_name' => 'LouvreController',
         ]);
     }
+
     /**
      * @Route("/", name="accueil")
      */
-    public function accueil()
-    {
+    public function accueil() {
         //Affichage des prix sur la page d'accueil
-        $prix= new Tarifs();
-        $prix=$this->getDoctrine()->getRepository(Tarifs::class)->findAll();
+        $prix = new Tarifs();
+        $prix = $this->getDoctrine()->getRepository(Tarifs::class)->findAll();
         return $this->render('louvre/accueil.html.twig', array(
-            'prix' => $prix)
+                    'prix' => $prix)
         );
     }
-    
+
     /**
      * @Route("/reservation", name="reservation")
      */
@@ -68,7 +65,7 @@ class LouvreController extends AbstractController
             }
             return $this->redirectToRoute('recapitulatif');
         }
-
+        // Création du formulaire de réservation dans le fichier twig
         return $this->render('louvre/reservation.html.twig', [
                     'formReservation' => $form->createView(),
         ]);
@@ -79,38 +76,39 @@ class LouvreController extends AbstractController
      * @Route("/recapitulatif", name="recapitulatif")
      */
     public function Recap() {
-        
+
         $session = new Session();
-        $reservation=$session->get('session_billets');
-        $billets=$reservation->getBillets();
-         return $this->render('louvre/recapitulatif.html.twig',[
-        'recap'=>$reservation,
-        'billets'=>$billets,  
-    ]);
-        
-}
-    
+        $reservation = $session->get('session_billets');
+        $billets = $reservation->getBillets();
+        return $this->render('louvre/recapitulatif.html.twig', [
+                    'recap' => $reservation,
+                    'billets' => $billets,
+        ]);
+    }
+
     /**
      * @Route("/payment", name="payment")
      */
     public function payment(Swift_Mailer $mailer) {
 
         $session = new Session();
-
+        //Récupération de la session
         $reservation = $session->get('session_billets');
-        $mail = $_POST['email'];
-        $billets=$reservation->getBillets();
-        
+        //Récupération de l'adresse mail
+        $mail = filter_input(\INPUT_POST, 'email');
+        //Récupération de tous les billets
+        $billets = $reservation->getBillets();
+
         //Insertion de l'email dans $reservation
         $reservation->setMail($mail);
-        
+
         $entityManager = $this->getDoctrine()->getManager();
 
         // Récupérer le montant TTC pour le mettre dans le paiement stripe        
-        $prixTTC = ($_POST['total']) * 100;
+        $prixTTC = filter_input(\INPUT_POST, 'total') * 100;
 
         // Récupérer le token de paiement
-        $token = $_POST['stripeToken'];
+        $token = filter_input(\INPUT_POST, 'stripeToken');
 
         Stripe::setApiKey("sk_test_NMS8iaVWh2STD5FqTP9PCeZz");
 
@@ -119,32 +117,33 @@ class LouvreController extends AbstractController
         // Get the payment token ID submitted by the form:
 
         Charge::create([
-                    'amount' => $prixTTC,
-                    'currency' => 'eur',
-                    'description' => 'Paiement final',
-                    'source' => $token,
-                    'receipt_email' => 'djapanana@free.fr',
+            'amount' => $prixTTC,
+            'currency' => 'eur',
+            'description' => 'Paiement final',
+            'source' => $token,
+            'receipt_email' => 'djapanana@free.fr',
         ]);
 
+        // Insertion dans la base de données
         $entityManager->persist($reservation);
         $entityManager->flush();
-        
-        $message = (new Swift_Message('Réservation de billet(s)'))
-        ->setFrom('sylvianna@free.fr')
-        ->setTo($mail)
-        ->setBody(
-            $this->renderView(
-                // templates/emails/confirmation.html.twig
-                'louvre/EmailsConfirmation.html.twig',[
-        'recap'=>$reservation,
-        'billets'=>$billets,  
-    ]),
-            
-            'text/html'
-        );
-         $mailer->send($message);
 
-        return $this->redirectToRoute('accueil');
+        //Création du message envoyé par mail
+        $message = (new Swift_Message('Réservation de billet(s)'))
+                ->setFrom('sylvianna@free.fr')
+                ->setTo($mail)
+                ->setBody(
+                $this->renderView(
+                        // templates/emails/confirmation.html.twig
+                        'louvre/EmailsConfirmation.html.twig', [
+                    'recap' => $reservation,
+                    'billets' => $billets,
+                ]),
+                'text/html'
+        );
+        $mailer->send($message);
+       return $this->redirectToRoute('accueil');
+        
     }
 
 }

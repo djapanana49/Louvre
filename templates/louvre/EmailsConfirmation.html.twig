@@ -3,20 +3,20 @@
 
 Bonjour,<br>
 
-Nous vous confirmons les réservations suuivantes :<br>
+Nous vous confirmons les réservations suivantes :<br>
 
 {% if app.session %}
             {% set total = 0 %}
-            <h3> Numéro de réservation: {{recap.getNumReservation}}</h3>
-            <h3> Date de votre visite: {{ recap.getDateVisite|date("d/m/Y") }}</h3>
-            <h3> Nombre de billet(s): {{ recap.getNbBillets }}</h3>
+            <h3> Numéro de réservation: {{recap.NumReservation}}</h3>
+            <h3> Date de votre visite: {{ recap.DateVisite|date("d/m/Y") }}</h3>
+            <h3> Nombre de billet(s): {{ recap.NbBillets }}</h3>
             <h3>Billets: <br>{% for billet in billets %}
 
-                Nom: {{ billet.getNom }}<br>
-                Prenom: {{ billet.getPrenom }}<br>
+                Nom: {{ billet.Nom }}<br>
+                Prenom: {{ billet.Prenom }}<br>
                 Date de naissance: {{ billet.DateDeNaissance|date("d/m/Y") }}<br>
-                Prix: {{billet.getTarif}} € <br>
-                {% set total = total + billet.getTarif %}
+                Prix: {{billet.Tarif}} € <br>
+                {% set total = total + billet.Tarif %}
                 <br> 
                 <hr>
                 {% endfor %}

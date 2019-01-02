@@ -22,12 +22,15 @@ class ReservationType extends AbstractType
                 ->add('date_visite',DateTimeType::class, array(
                     'format'=> 'dd/MM/yyyy',
                     'widget' => 'single_text',
-                ))
+                    'html5'=>false,
+                    'attr' => ['class' => 'js-datepicker'],))
                /* ->add('date_reservation',DateTimeType::class, array(
                     'format'=> 'dd/MM/yyyy',
                     'widget' => 'single_text',))*/
                 ->add('nb_billets',IntegerType::class,array(
                         'data' => '1',
+                        'attr'=>['min'=>1,
+                                 'max'=>20,],
                 ))
                 ->add('journee',ChoiceType::class, array(
                     'choices' => array(

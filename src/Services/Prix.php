@@ -25,14 +25,13 @@ class Prix  {
                 $interval = $date->diff($date2);// calcul de l'âge
                 $age = (int) $interval->y;
                 
-                // billet journée ou demi-journée
-                switch($reservations->getJournee()){ 
-                    case true:
+                // billet journée 
+                if($reservations->getJournee()===true){ 
+                    
                 // Tarif réduit ou pas 
-                    if ($billet->getReduit()==true){
-                        $prix=$billet->setTarif(10);
+                    if ($billet->getReduit()===true){
+                        $billet->setTarif(10);
                     }
-               
                     else if ($age >= 12) {
                         $billet->setTarif(16);
                     } else if ($age >= 60) {
@@ -40,15 +39,17 @@ class Prix  {
                     } else if (($age >= 4) && ($age < 12)) {
                         $billet->setTarif(8);
                     }
-                    else if (($age == 0) && ($age < 4)) {
+                    else if (($age >=0) && ($age < 4)) {
                         $billet->setTarif(0);
+                        
                     }
-                    break;
-                    case false:
-                        if ($billet->getReduit()==true){
+                }
+                //billet demi-journée
+                else {
+                     
+                    if ($billet->getReduit()===true){
                         $billet->setTarif(5);
                     }
-               
                     else if ($age >= 12) {
                         $billet->setTarif(8);
                     } else if ($age >= 60) {
@@ -56,12 +57,11 @@ class Prix  {
                     } else if (($age >= 4) && ($age < 12)) {
                         $billet->setTarif(4);
                     }
-                    else if (($age == 0) && ($age < 4)) {
+                    else if (($age  >=0) && ($age < 4)) {
                         $billet->setTarif(0);
                     }
-                    break;
-                    default: echo'Veuillez choisir une option svp';break;
-        }
+                    
+                }
      }
     }
 

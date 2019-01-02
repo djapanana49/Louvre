@@ -1,10 +1,25 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Page de réservation{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker.css">
+{% endblock %}
 {% form_theme formReservation 'bootstrap_4_layout.html.twig' %}
+{% block menu%}
+  <div class="collapse navbar-collapse" id="navbarColor01">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item">
+        <a class="nav-link" href={{ path('accueil') }}>Accueil<span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" href={{ path('reservation') }}>Reservations</a>
+      </li>
+    </ul>
+   {%endblock%}
 {% block head%}
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="#">Accueil</a></li>
+        <li class="breadcrumb-item"><a href="{{ path('accueil') }}">Accueil</a></li>
         <li class="breadcrumb-item active">Reservations</li>
     </ol>
 {%endblock%}
@@ -25,7 +40,8 @@
         <fieldset>
             <legend>Choisissez la date de votre visite</legend>
             {{ form_row(formReservation.date_visite,{
-            'label':'Date de votre visite'})}}
+            'label':'Date de votre visite',
+            'attr':{'id':'datepicker',}})}}
         </fieldset>
         <br>
         <fieldset>
@@ -56,18 +72,50 @@
 
         {{ form_end(formReservation) }}
         {% block javascripts %}
-            <script language="Javascript">
-  document.querySelector("#ajout").addEventListener('click', function () {
+        
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/js/bootstrap-datepicker.min.js"></script>
 
-     var billet = document.querySelector("#reservation_billets");
-     var prototype = billet.dataset.prototype;
-     var index = document.getElementById("reservation_nb_billets");
+       <script>
+        
+    //options françaises du datepicker
+    (function($){
+                $.fn.datepicker.dates['fr'] = {
+                days: ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"],
+                daysShort: ["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."],
+                daysMin: ["d", "l", "ma", "me", "j", "v", "s"],
+                months: ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"],
+                monthsShort: ["janv.", "févr.", "mars", "avril", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."],
+                today: "Aujourd'hui",
+                monthsTitle: "Mois",
+                clear: "Effacer",
+                weekStart: 1,
+                format: "dd/mm/yyyy"
+                    };
+             }(jQuery));
+             
+    // datepicker avec ses options
+    jQuery(document).ready(function() {
+            $('.js-datepicker').datepicker({  
+            language: 'fr',
+            format: "dd/mm/yyyy",
+            autoclose: true,
+            todayHighlight: true,
+            });
+           
+        });
+    
+    //modification de __name__ et __nama__label__ par 1 numéro
+    document.querySelector("#ajout").addEventListener('click', function () {
 
-     for (var i = 0; i < index.value; i++) {
-       var ligne = i + 1;
-       billet.innerHTML += prototype.replace(/__name__label__/g, 'Billet n°' + ligne).replace(/__name__/g, ligne);
+        var billet = document.querySelector("#reservation_billets");
+        var prototype = billet.dataset.prototype;
+        var index = document.getElementById("reservation_nb_billets");
 
-     }
+            for (var i = 0; i < index.value; i++) {
+                var ligne = i + 1;
+                billet.innerHTML += prototype.replace(/__name__label__/g, 'Billet n°' + ligne).replace(/__name__/g, ligne);
+
+                }
                     
     }
  );

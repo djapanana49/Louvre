@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Page de réservation{% endblock %}
+{% block title %}Récapitulatif{% endblock %}
 {% block head%}
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="#">Accueil</a></li>
@@ -22,27 +22,34 @@
 
         {% if app.session %}
             {% set total = 0 %}
-            <h3> Numéro de réservation: {{recap.getNumReservation}}</h3>
-            <h3> Date de votre visite: {{ recap.getDateVisite|date("d/m/Y") }}</h3>
-            <h3> Nombre de billet(s): {{ recap.getNbBillets }}</h3>
+            <h3> Numéro de réservation: {{recap.NumReservation}}</h3>
+            <h3> Date de votre visite: {{ recap.DateVisite|date("d/m/Y") }}</h3>
+            <h3> Nombre de billet(s): {{ recap.NbBillets }}</h3>
             <h3>Billets: <br>{% for billet in billets %}
 
-                Nom: {{ billet.getNom }}<br>
-                Prenom: {{ billet.getPrenom }}<br>
+                Nom: {{ billet.Nom }}<br>
+                Prenom: {{ billet.Prenom }}<br>
                 Date de naissance: {{ billet.DateDeNaissance|date("d/m/Y") }}<br>
-                Prix: {{billet.getTarif}} € <br>
-                {% set total = total + billet.getTarif %}
+                {% if billet.Tarif <=0 %}
+                    {% set gratuit = "gratuit" %}
+                    Prix: {{ gratuit }}<br>
+                {% else %}
+                     Prix: {{billet.Tarif}} € <br>
+                {% endif %} 
+                
+                {% set total = total + billet.Tarif %}
                 <br> 
                 <hr>
+                
                 {% endfor %}
 
-
+                 Total de la réservation: {{ total }} €<br>
                 </h3>
                 <br>
                 {% endif %}
                     <form action='{{ path('payment') }}' method="post" id="payment-form"> 
                         <!--Récupération du total de la commande-->
-                        Total de votre commande : <input type="text" class="form-control" id="total" value= '{{total}}' name="total" /><br>  
+                        <input type="hidden" class="form-control" id="total" value= '{{total}}' name="total" /><br>  
                         Votre adresse mail pour recevoir votre confirmation: <input type="email" class="form-control" id="email" aria-describedby="emailHelp"placeholder="Entrez votre adresse mail svp" name="email"/><br><br>
 
                         <div class="form">
@@ -82,10 +89,10 @@
                             var style = {
                                 base: {
                                     color: '#32325d',
-                                    lineHeight: '28px',
+                                    lineHeight: '20px',
                                     fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
                                     fontSmoothing: 'antialiased',
-                                    fontSize: '30px',
+                                    fontSize: '15px',
                                     '::placeholder': {
                                         color: '#aab7c4'
                                     }

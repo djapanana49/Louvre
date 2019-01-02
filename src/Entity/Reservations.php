@@ -49,7 +49,7 @@ class Reservations
      *      min = 1,
      *      max = 20,
      *      minMessage = "vous devez choisir au moins {{ limit }} billet",
-     *      maxMessage = "Vous ne pouvez pas choisir plus de {{ limit }}billets"
+     *      maxMessage = "Vous ne pouvez pas choisir plus de {{ limit }} billets"
      * )
      * @Assert\Type(
      *     type="integer",

@@ -8,23 +8,29 @@
 
 namespace App\Services;
 
+use Swift_Mailer;
+use Swift_Message;
+
 class SendMail
 {
-    
-   public function MailConfirmation($name, $email,Swift_Mailer $mailer)
+   
+   
+   public function MailConfirmation($reservation,$billets,$mail)
 {
-    $message = (new Swift_Message('Réservation de billet(s)'))
-        ->setFrom('sylvianna@free.fr')
-        ->setTo($email)
-        ->setBody(
-            $this->renderView(
-                // templates/emails/confirmation.html.twig
-                'EmailsConfirmation.html.twig',
-                array('name' => $name,
-                )
-            ),
-            'text/html'
-        )
+        //Création du message envoyé par mail
+        $message = (new Swift_Message('Réservation de billet(s)'))
+                ->setFrom('sylvianna@free.fr')
+                ->setTo($mail)
+                ->setBody(
+                $this->renderView(
+                        // templates/emails/confirmation.html.twig
+                        'louvre/EmailsConfirmation.html.twig', [
+                    'recap' => $reservation,
+                    'billets' => $billets,
+                ]),
+                'text/html'
+        );
+        $mailer->send($message);
         /*
          * If you also want to include a plaintext version of the message
         ->addPart(
@@ -35,10 +41,5 @@ class SendMail
             'text/plain'
         )
         */
-    ;
-
-    $mailer->send($message);
-
-    return $this->render('accueil');
 }
 }
