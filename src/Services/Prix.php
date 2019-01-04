@@ -23,7 +23,7 @@ class Prix  {
                 $date->format('d/m/Y');
                 $date2->format('d/m/Y');
                 $interval = $date->diff($date2);// calcul de l'âge
-                $age = (int) $interval->y;
+                $age = (int) $interval->y; // âge en années
                 
                 // billet journée 
                 if($reservations->getJournee()===true){ 
