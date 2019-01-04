@@ -5,11 +5,11 @@ namespace App\Controller;
 use App\Entity\Reservations;
 use App\Entity\Tarifs;
 use App\Form\ReservationType;
+use App\Services\CheckJournee;
 use App\Services\Prix;
+use App\Services\SendMail;
 use Stripe\Charge;
 use Stripe\Stripe;
-use Swift_Mailer;
-use Swift_Message;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -41,10 +41,13 @@ class LouvreController extends AbstractController {
     /**
      * @Route("/reservation", name="reservation")
      */
-    public function newReservation(Request $request, Prix $prix_billet) {
+    public function newReservation(Request $request) {
 
         $reservation = new Reservations();
         $session = new Session();
+       //$JourneeValidator=new JourneeValidator();
+       //$check = new CheckJournee();
+       $prix_billet = new Prix();
 
         //création du formulaire
         $form = $this->createForm(ReservationType::class, $reservation);
@@ -54,15 +57,29 @@ class LouvreController extends AbstractController {
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-
+           
+                
+             //vérification de la réservation le jour même 
+           // $reservation->setJournee($check->CheckJournee($reservation));
+            
+            $NbBillets = $this->getDoctrine()
+            ->getRepository(Reservations::class)
+            ->SumTicket($reservation->getDateVisite());
+            if($NbBillets >10){
             //Récupération des prix en fonction de la date de naissance
             $prix_billet->findPrice($reservation);
-
+            }
+            else{
+                
+                echo'Trop de billets vendus pour cette date';die;
+            }
             //création de la session $reservation
 
             if ($request->hasSession() && ($session = $request->getSession())) {
                 $session->set('session_billets', $reservation);
+               
             }
+           
             return $this->redirectToRoute('recapitulatif');
         }
         // Création du formulaire de réservation dans le fichier twig
@@ -89,7 +106,7 @@ class LouvreController extends AbstractController {
     /**
      * @Route("/payment", name="payment")
      */
-    public function payment(Swift_Mailer $mailer) {
+    public function payment(SendMail $confirmation) {
 
         $session = new Session();
         //Récupération de la session
@@ -128,20 +145,12 @@ class LouvreController extends AbstractController {
         $entityManager->persist($reservation);
         $entityManager->flush();
 
-        //Création du message envoyé par mail
-        $message = (new Swift_Message('Réservation de billet(s)'))
-                ->setFrom('sylvianna@free.fr')
-                ->setTo($mail)
-                ->setBody(
-                $this->renderView(
-                        // templates/emails/confirmation.html.twig
-                        'louvre/EmailsConfirmation.html.twig', [
-                    'recap' => $reservation,
-                    'billets' => $billets,
-                ]),
-                'text/html'
+        //Envoi de la confirmation par mail
+        $confirmation->MailConfirmation($reservation, $billets);
+        $this->addFlash(
+            'notice',
+            'Mail de confirmation envoyé'
         );
-        $mailer->send($message);
        return $this->redirectToRoute('accueil');
         
     }
