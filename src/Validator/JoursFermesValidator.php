@@ -2,11 +2,12 @@
 
 namespace App\Validator;
 
-use DateInterval;
-use DateTime;
-use DateTimeZone;
+use App\Validator\JoursFermes;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
+use DateTime;
+use DateInterval;
+
 
 class JoursFermesValidator extends ConstraintValidator {
 

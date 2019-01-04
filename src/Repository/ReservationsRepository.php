@@ -18,6 +18,18 @@ class ReservationsRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Reservations::class);
     }
+    
+    public function SumTicket($value){
+        
+        return $this->createQueryBuilder('s')
+                ->select('SUM(s.nb_billets)')
+                ->andWhere('s.date_visite=:date')
+                ->setParameter('date',$value)
+                ->getQuery()
+                ->getOneOrNullResult()
+                
+                ;
+    }
 
     // /**
     //  * @return Reservations[] Returns an array of Reservations objects
@@ -47,4 +59,5 @@ class ReservationsRepository extends ServiceEntityRepository
         ;
     }
     */
+    
 }

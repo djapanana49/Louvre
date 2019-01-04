@@ -6,9 +6,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\Journee;
 use App\Validator\JoursFermes;
+use App\Validator\Journee;
 use DateTimeZone;
+use DateTime;
 
 
 /**
@@ -69,21 +70,21 @@ class Reservations
     private $mail;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Billets", mappedBy="reservation",cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Billets", mappedBy="reservation",cascade={"persist"})
      * 
      */
     private $billets;
 
     /**
      * @ORM\Column(type="boolean")
-     *@Journee
+     * 
      */
     private $journee;
-
+   
     public function __construct()
     {
         $this->billets = new ArrayCollection();
-        $this->setDateReservation(new \DateTime('now',new DateTimeZone('Europe/Paris')));
+        $this->setDateReservation(new DateTime('now',new DateTimeZone('Europe/Paris')));
         $this->setNumReservation(uniqid(). time());
     }
 
@@ -109,7 +110,7 @@ class Reservations
         return $this->date_visite;
     }
 
-    public function setDateVisite(\DateTime $date_visite=null)
+    public function setDateVisite(DateTime $date_visite=null)
     {
         $this->date_visite = $date_visite;
 
@@ -121,7 +122,7 @@ class Reservations
         return $this->date_reservation;
     }
 
-    public function setDateReservation(\DateTime $date_reservation = null)
+    public function setDateReservation(DateTime $date_reservation = null)
     {
         $this->date_reservation = $date_reservation;
 
@@ -183,7 +184,7 @@ class Reservations
         return $this;
     }
 
-    public function getJournee(): ?bool
+    public function getJournee()
     {
         return $this->journee;
     }
@@ -194,4 +195,6 @@ class Reservations
 
         return $this;
     }
+    
+   
 }

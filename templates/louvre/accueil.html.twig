@@ -1,7 +1,9 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Page d'accueil!{% endblock %}
-
+{% block head%}
+    <img src="{{ asset ('images/Louvre_Museum_Wikimedia_Commons.jpg')}}" class="center">
+{%endblock%}
 {% block body %}
     <style>
         .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
@@ -11,6 +13,7 @@
     <div class="example-wrapper">
         <h1>Page d'accueil de Louvre -OC! ✅</h1>
         <br><br>
+
         <table class="table">
             <thead>
                 <tr>
@@ -27,6 +30,8 @@
                 {% endfor %}
             </tbody>
         </table>
-            <p> *Tarif normal à partir de 12 ans / Gratuit pour les enfants de moins de 4 ans</p>
+        <p> *Tarif normal à partir de 12 ans / Gratuit pour les enfants de moins de 4 ans</p>
     </div>
+
+
 {% endblock %}
