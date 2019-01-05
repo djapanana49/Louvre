@@ -29,6 +29,7 @@
                         </li>
                     </ul>
                 {%endblock%}
+                
                 <form class="form-inline my-2 my-lg-0">
                     <input class="form-control mr-sm-2" type="text" placeholder="Recherche">
                     <button class="btn btn-secondary my-2 my-sm-0" type="submit">Recherche</button>
@@ -38,6 +39,28 @@
     {% block head%}{%endblock%}
 </head>
 <body>
+    {% block flash %}
+        {% for flash_message in app.session.flashbag.get('success') %}
+            <div class="container alert alert-success" role="alert">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
+        {% for flash_message in app.session.flashbag.get('info') %}
+            <div class="container alert alert-info" role="alert">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
+        {% for flash_message in app.session.flashbag.get('warning') %}
+            <div class="container alert alert-warning" role="alert">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
+        {% for flash_message in app.session.flashbag.get('danger') %}
+            <div class="container alert alert-danger" role="alert">
+                {{ flash_message }}
+            </div>
+        {% endfor %}
+    {% endblock %}
     {% block body %}{% endblock %}
 
 </body>

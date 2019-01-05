@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator\JoursFermes;
 use App\Validator\Journee;
+//use App\Validator\MilleBillets;
 use DateTimeZone;
 use DateTime;
 
@@ -77,7 +78,7 @@ class Reservations
 
     /**
      * @ORM\Column(type="boolean")
-     * 
+     * @Journee
      */
     private $journee;
    

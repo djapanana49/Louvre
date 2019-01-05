@@ -37,7 +37,7 @@ class CheckJournee {
      $date2->format('d/m/Y');
      $interval = $date->diff($date2);
      $heure= new DateTime('today');
-     $heure->setTime(11,0);
+     $heure->setTime(14,0);
      $heure2= new DateTime('now');
      $heure2->format('H:i');
      if(($interval->d===0)&& (($heure2 >$heure)==true))

@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Reservations;
 use App\Entity\Tarifs;
 use App\Form\ReservationType;
-use App\Services\CheckJournee;
 use App\Services\Prix;
 use App\Services\SendMail;
 use Stripe\Charge;
@@ -31,7 +30,7 @@ class LouvreController extends AbstractController {
      */
     public function accueil() {
         //Affichage des prix sur la page d'accueil
-        $prix = new Tarifs();
+        
         $prix = $this->getDoctrine()->getRepository(Tarifs::class)->findAll();
         return $this->render('louvre/accueil.html.twig', array(
                     'prix' => $prix)
@@ -45,9 +44,7 @@ class LouvreController extends AbstractController {
 
         $reservation = new Reservations();
         $session = new Session();
-       //$JourneeValidator=new JourneeValidator();
-       //$check = new CheckJournee();
-       $prix_billet = new Prix();
+        $prix_billet = new Prix();
 
         //création du formulaire
         $form = $this->createForm(ReservationType::class, $reservation);
@@ -57,36 +54,39 @@ class LouvreController extends AbstractController {
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
-           
-                
-             //vérification de la réservation le jour même 
-           // $reservation->setJournee($check->CheckJournee($reservation));
-            
+
+
+            //vérification de la réservation le jour même 
+            // $reservation->setJournee($check->CheckJournee($reservation));
+
             $NbBillets = $this->getDoctrine()
-            ->getRepository(Reservations::class)
-            ->SumTicket($reservation->getDateVisite());
-            if($NbBillets >10){
-            //Récupération des prix en fonction de la date de naissance
-            $prix_billet->findPrice($reservation);
-            }
-            else{
+                    ->getRepository(Reservations::class)
+                    ->SumTicket($reservation->getDateVisite());
+            var_dump($NbBillets);
+            var_dump($NbBillets <10);die;
+            
+            if ($NbBillets <"10") {
+                //Récupération des prix en fonction de la date de naissance
+                $prix_billet->findPrice($reservation);
+                 if ($request->hasSession() && ($session = $request->getSession())) {
+                $session->set('session_billets', $reservation);
                 
-                echo'Trop de billets vendus pour cette date';die;
+            }
+
+            return $this->redirectToRoute('recapitulatif');
+            } else {
+
+               $this->addFlash('warning', 'Il n\'y a plus de billets pour cette date');
             }
             //création de la session $reservation
 
-            if ($request->hasSession() && ($session = $request->getSession())) {
-                $session->set('session_billets', $reservation);
-               
-            }
            
-            return $this->redirectToRoute('recapitulatif');
         }
         // Création du formulaire de réservation dans le fichier twig
         return $this->render('louvre/reservation.html.twig', [
                     'formReservation' => $form->createView(),
         ]);
-        // ...
+        
     }
 
     /**
@@ -106,7 +106,7 @@ class LouvreController extends AbstractController {
     /**
      * @Route("/payment", name="payment")
      */
-    public function payment(SendMail $confirmation) {
+    public function payment(SendMail $sendmail) {
 
         $session = new Session();
         //Récupération de la session
@@ -146,12 +146,12 @@ class LouvreController extends AbstractController {
         $entityManager->flush();
 
         //Envoi de la confirmation par mail
-        $confirmation->MailConfirmation($reservation, $billets);
+        $sendmail->MailConfirmation($reservation, $billets);
         $this->addFlash(
-            'notice',
+            'success',
             'Mail de confirmation envoyé'
         );
-       return $this->redirectToRoute('accueil');
+       
         
     }
 

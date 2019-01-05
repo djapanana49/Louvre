@@ -10,14 +10,21 @@ class JourneeValidator extends ConstraintValidator
 {
     
     
-    public function validate($reservation, Constraint $constraint)
+    public function validate($value, Constraint $constraint)
     {
-    $check = new CheckJournee($reservation);
-        /* @var $constraint Journee */
-   if($check->CheckJournee()==false){
-        $this->context->buildViolation($constraint->message)
-            ->setParameter('{{ value }}',$reservation)
+   // $check = new CheckJournee($reservation);
+  $objectResa=$this->context->getObject();
+  $check = new CheckJournee($objectResa);
+  
+  if(($check->CheckJournee()==false)&&($value==true)){
+      
+      $this->context->buildViolation($constraint->message)
+            ->setParameter('{{ value }}',$value)
             ->addViolation();
-   }
+  }
+        /* @var $constraint Journee */
+   
+        
+   
     }
 }
