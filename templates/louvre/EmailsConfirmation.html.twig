@@ -1,7 +1,7 @@
 
 <img src="{{ cid }}" width="500" height="79"><br><br>
 
-<h3>Confirmation de votre réservation</h3>
+<h3>Confirmation de votre réservation au Louvre - OC</h3>
 
 Bonjour,<br>
 
@@ -17,7 +17,6 @@ Nous vous confirmons les réservations suivantes :<br>
 
                 Nom: {{ billet.Nom }}<br>
                 Prenom: {{ billet.Prenom }}<br>
-                Date de naissance: {{ billet.DateDeNaissance|date("d/m/Y") }}<br>
                 Prix: {{billet.Tarif}} € <br>
                 {% set total = total + billet.Tarif %}
                 <br> 

@@ -24,7 +24,7 @@
             {%set type ="Billet(s) Demi-journée"  %} 
 
         {% endif %}
-        <h3> <span class="badge badge-info">{{ type }}</span></h3>
+        <h3> <span class="badge badge-info">{{ type }}</span></h3><br>
         
         <!--Récapitulatif de la réservation grâce à la session-->
         {% if app.session %}
@@ -33,6 +33,11 @@
                     Date de votre visite: {{ recap.DateVisite|date("d/m/Y") }}<br>
                     Nombre de billet(s): {{ recap.NbBillets }}<br>
                     Billets: <br>{% for billet in billets %}<br>
+                    <!--Avertissement pour un justificatif de réduction-->
+                    {% if billet.reduit==true %}
+                    {% set reduit = "Un justificatif de votre réduction vous sera demandé" %}
+                    {% endif %}
+                    <span class="badge badge-warning">{{ reduit }}</span><br><br>
                     Nom: {{ billet.Nom }}<br>
                     Prenom: {{ billet.Prenom }}<br>
                     Date de naissance: {{ billet.DateDeNaissance|date("d/m/Y") }}<br>
