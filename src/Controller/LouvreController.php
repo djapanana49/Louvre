@@ -7,8 +7,7 @@ use App\Entity\Tarifs;
 use App\Form\ReservationType;
 use App\Services\Prix;
 use App\Services\SendMail;
-use Stripe\Charge;
-use Stripe\Stripe;
+use App\Services\StripePayment;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -63,14 +62,12 @@ class LouvreController extends AbstractController {
                     ->getRepository(Reservations::class)
                     ->SumTicket($reservation->getDateVisite());
             var_dump($NbBillets);
-            var_dump($NbBillets <10);die;
-            
-            if ($NbBillets <"10") {
+            if ($NbBillets <10) {
                 //Récupération des prix en fonction de la date de naissance
                 $prix_billet->findPrice($reservation);
                  if ($request->hasSession() && ($session = $request->getSession())) {
                 $session->set('session_billets', $reservation);
-                
+                $this->addFlash('success', 'Réservation enregistrée'); 
             }
 
             return $this->redirectToRoute('recapitulatif');
@@ -106,7 +103,7 @@ class LouvreController extends AbstractController {
     /**
      * @Route("/payment", name="payment")
      */
-    public function payment(SendMail $sendmail) {
+    public function payment(SendMail $sendmail, StripePayment $stripe) {
 
         $session = new Session();
         //Récupération de la session
@@ -126,20 +123,9 @@ class LouvreController extends AbstractController {
 
         // Récupérer le token de paiement
         $token = filter_input(\INPUT_POST, 'stripeToken');
-
-        Stripe::setApiKey("sk_test_NMS8iaVWh2STD5FqTP9PCeZz");
-
-
-        // Token is created using Checkout or Elements!
-        // Get the payment token ID submitted by the form:
-
-        Charge::create([
-            'amount' => $prixTTC,
-            'currency' => 'eur',
-            'description' => 'Paiement final',
-            'source' => $token,
-            'receipt_email' => 'djapanana@free.fr',
-        ]);
+        
+        // Envoi de la demande de paiement
+        $stripe->StripePayment($prixTTC,$token);
 
         // Insertion dans la base de données
         $entityManager->persist($reservation);
@@ -147,11 +133,9 @@ class LouvreController extends AbstractController {
 
         //Envoi de la confirmation par mail
         $sendmail->MailConfirmation($reservation, $billets);
-        $this->addFlash(
-            'success',
-            'Mail de confirmation envoyé'
-        );
-       
+        $this->addFlash('success','Mail de confirmation envoyé');
+        
+       return $this->redirectToRoute('accueil');
         
     }
 

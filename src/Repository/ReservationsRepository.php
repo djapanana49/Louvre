@@ -26,7 +26,7 @@ class ReservationsRepository extends ServiceEntityRepository
                 ->andWhere('s.date_visite=:date')
                 ->setParameter('date',$value)
                 ->getQuery()
-                ->getOneOrNullResult()
+                ->getSingleScalarResult()
                 
                 ;
     }
