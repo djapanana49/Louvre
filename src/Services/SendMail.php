@@ -8,6 +8,8 @@
 
 namespace App\Services;
 
+use Swift_Attachment;
+use Swift_Image;
 use Swift_Mailer;
 use Swift_Message;
 use Twig\Environment;
@@ -32,16 +34,20 @@ class SendMail {
     }
 
     public function MailConfirmation($reservation, $billets) {
+        
+        $message = new Swift_Message('Réservation de billet(s)');
         //Création du message envoyé par mail
-        $message = (new Swift_Message('Réservation de billet(s)'))
-                ->setFrom('Reservations@Louvre.fr')
+        $cid = $message->embed(Swift_Image::fromPath('images/Logo_louvre.png'));
+        $message->setFrom('Reservations@Louvre.fr')
                 ->setTo($reservation->getMail())
+                ->attach(Swift_Attachment::fromPath('images/Logo_louvre.png'))
                 ->setBody(
                 $this->renderer->render(
                         // templates/emails/confirmation.html.twig
                         'louvre/EmailsConfirmation.html.twig', [
                     'recap' => $reservation,
                     'billets' => $billets,
+                     'cid'=>$cid,
                 ]),
                 'text/html'
         );
