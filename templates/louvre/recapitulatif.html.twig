@@ -36,8 +36,9 @@
                     <!--Avertissement pour un justificatif de réduction-->
                     {% if billet.reduit==true %}
                     {% set reduit = "Un justificatif de votre réduction vous sera demandé" %}
-                    {% endif %}
                     <span class="badge badge-warning">{{ reduit }}</span><br><br>
+                    {% endif %}
+                    
                     Nom: {{ billet.Nom }}<br>
                     Prenom: {{ billet.Prenom }}<br>
                     Date de naissance: {{ billet.DateDeNaissance|date("d/m/Y") }}<br>

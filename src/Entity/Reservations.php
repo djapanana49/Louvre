@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator\JoursFermes;
 use App\Validator\Journee;
+use App\Validator\CheckNbBillets;
 //use App\Validator\MilleBillets;
 use DateTimeZone;
 use DateTime;
@@ -36,6 +37,7 @@ class Reservations
      * @Assert\GreaterThanOrEqual("today",
      * message="Les réservations pour des dates passées sont interdites ")
      * @JoursFermes
+     * @CheckNbBillets
      */
     private $date_visite;
 

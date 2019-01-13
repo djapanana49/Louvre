@@ -54,30 +54,17 @@ class LouvreController extends AbstractController {
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-
-            //vérification de la réservation le jour même 
-            // $reservation->setJournee($check->CheckJournee($reservation));
-
-            $NbBillets = $this->getDoctrine()
-                    ->getRepository(Reservations::class)
-                    ->SumTicket($reservation->getDateVisite());
-            var_dump($NbBillets);
-            if ($NbBillets <10) {
-                //Récupération des prix en fonction de la date de naissance
-                $prix_billet->findPrice($reservation);
-                 if ($request->hasSession() && ($session = $request->getSession())) {
+            //Récupération des prix en fonction de la date de naissance
+            $prix_billet->findPrice($reservation);
+            if ($request->hasSession() && ($session = $request->getSession())) {
+                
+                //création de la session $reservation
                 $session->set('session_billets', $reservation);
-                $this->addFlash('success', 'Réservation enregistrée'); 
+                //$this->addFlash('success', 'Réservation enregistrée'); 
             }
 
-            return $this->redirectToRoute('recapitulatif');
-            } else {
-
-               $this->addFlash('warning', 'Il n\'y a plus de billets pour cette date');
-            }
-            //création de la session $reservation
-
-           
+        return $this->redirectToRoute('recapitulatif');
+     
         }
         // Création du formulaire de réservation dans le fichier twig
         return $this->render('louvre/reservation.html.twig', [
@@ -93,6 +80,10 @@ class LouvreController extends AbstractController {
 
         $session = new Session();
         $reservation = $session->get('session_billets');
+        if($reservation==null){
+            $this->addFlash('danger','Vous n\'avez pas accès à cette page');
+            return $this->redirectToRoute('accueil');
+        }
         $billets = $reservation->getBillets();
         return $this->render('louvre/recapitulatif.html.twig', [
                     'recap' => $reservation,
@@ -106,8 +97,13 @@ class LouvreController extends AbstractController {
     public function payment(SendMail $sendmail, StripePayment $stripe) {
 
         $session = new Session();
+       
         //Récupération de la session
         $reservation = $session->get('session_billets');
+         if($reservation==null){
+            $this->addFlash('danger','Vous n\'avez pas accès à cette page');
+            return $this->redirectToRoute('accueil');
+        }
         //Récupération de l'adresse mail
         $mail = filter_input(\INPUT_POST, 'email');
         //Récupération de tous les billets
@@ -123,10 +119,11 @@ class LouvreController extends AbstractController {
 
         // Récupérer le token de paiement
         $token = filter_input(\INPUT_POST, 'stripeToken');
+         
         
         // Envoi de la demande de paiement
-        $stripe->StripePayment($prixTTC,$token);
-
+       $transaction = $stripe->StripePayment($prixTTC,$token);
+       if ( $transaction instanceof Stripe\Charge && $transaction->status === 'succeeded' ) {
         // Insertion dans la base de données
         $entityManager->persist($reservation);
         $entityManager->flush();
@@ -134,7 +131,11 @@ class LouvreController extends AbstractController {
         //Envoi de la confirmation par mail
         $sendmail->MailConfirmation($reservation, $billets);
         $this->addFlash('success','Mail de confirmation envoyé');
-        
+        }
+        else{
+            $this->addFlash('danger','Une erreur de paiement s\'est produite');
+        }
+       $session->clear();
        return $this->redirectToRoute('accueil');
         
     }
