@@ -32,7 +32,7 @@ class Prix  {
                     if ($billet->getReduit()===true){
                         $billet->setTarif(10);
                     }
-                    else if ($age >= 12) {
+                    else if (($age >= 12)&&($age<60)){
                         $billet->setTarif(16);
                     } else if ($age >= 60) {
                         $billet->setTarif(12);
