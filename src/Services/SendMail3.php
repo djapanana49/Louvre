@@ -40,8 +40,8 @@ class SendMail3 {
                 $mail->isSMTP();                                      // Set mailer to use SMTP
                 $mail->Host = 'email-smtp.eu-west-1.amazonaws.com';  // Specify main and backup SMTP servers
                 $mail->SMTPAuth = true;                               // Enable SMTP authentication
-                $mail->Username = 'AKIAJP6HKQJJRJ7K6WQQ';                 // SMTP username
-                $mail->Password = 'BJ37STZGwVCsIY3vPkHRmrO0I+PaZhG7kCdPbjD2u743';                           // SMTP password
+                $mail->Username = 'Your username';                 // SMTP username
+                $mail->Password = 'Your Password';                           // SMTP password
                 $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
                 $mail->Port = 587;                                    // TCP port to connect to
 
