@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page d'accueil!{% endblock %}
+
+{% block head%}   
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="#">Accueil</a></li>
+        <li class="breadcrumb-item active"><a href="#">Reservations</a></li>
+        <li class="breadcrumb-item active"><a href="#">Paiement</a></li>
+        <li class="breadcrumb-item active">Finalisation</li>
+    </ol>
+<img src="{{ asset ('images/Louvre_Museum_Wikimedia_Commons.jpg')}}"  class="d-block mx-auto img-fluid" max-width="100%" height=auto">  
+{%endblock%}
+
+{% block body %}
+   
+    <div class="example-wrapper">
+         <center> <h1>Une erreur s'est produite !!!!</h1><br><br>
+
+            <h2 class="text-danger">Votre réservation n'a pas pu aboutir<br>
+                Nous vous invitons à renouveler votre demande<br><br><br>
+                 <a class="btn btn-primary" href={{ path('reservation') }} >Page de réservation</a>
+            </h2>
+         </center>
+       
+    </div><br><br>
+        
+ 
+                
+{% endblock %}

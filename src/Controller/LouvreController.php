@@ -6,7 +6,7 @@ use App\Entity\Reservations;
 use App\Entity\Tarifs;
 use App\Form\ReservationType;
 use App\Services\Prix;
-use App\Services\SendMail;
+use App\Services\SendMail3;
 use App\Services\StripePayment;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -79,12 +79,12 @@ class LouvreController extends AbstractController {
     public function Recap() {
 
         $session = new Session();
-        $reservation = $session->get('session_billets');
+        $reservation = $session->get('session_billets');                        //vérification de la session
         if($reservation==null){
-            $this->addFlash('danger','Vous n\'avez pas accès à cette page');
-            return $this->redirectToRoute('accueil');
+            $this->addFlash('danger','Vous n\'avez pas accès à cette page');    //Message d'erreur s'il n'y a pas de session
+            return $this->redirectToRoute('accueil');                           //Redirection vers la page d'accueil                  
         }
-        $billets = $reservation->getBillets();
+        $billets = $reservation->getBillets();                                  // Récupération des billets
         return $this->render('louvre/recapitulatif.html.twig', [
                     'recap' => $reservation,
                     'billets' => $billets,
@@ -94,12 +94,13 @@ class LouvreController extends AbstractController {
     /**
      * @Route("/payment", name="payment")
      */
-    public function payment(SendMail $sendmail, StripePayment $stripe) {
+    public function payment(SendMail3 $sendmail, StripePayment $stripe) {
 
         $session = new Session();
        
         //Récupération de la session
         $reservation = $session->get('session_billets');
+        
          if($reservation==null){
             $this->addFlash('danger','Vous n\'avez pas accès à cette page');
             return $this->redirectToRoute('accueil');
@@ -123,20 +124,47 @@ class LouvreController extends AbstractController {
         
         // Envoi de la demande de paiement
        $transaction = $stripe->StripePayment($prixTTC,$token);
-       if ( $transaction instanceof Stripe\Charge && $transaction->status === 'succeeded' ) {
+       
+       if ( $transaction->status === 'succeeded' ) {
         // Insertion dans la base de données
         $entityManager->persist($reservation);
         $entityManager->flush();
 
         //Envoi de la confirmation par mail
         $sendmail->MailConfirmation($reservation, $billets);
-        $this->addFlash('success','Mail de confirmation envoyé');
+        
+            $this->addFlash('success','La confirmation de votre réservation a été envoyée');
+            return $this->redirectToRoute('succes');
+             
         }
         else{
             $this->addFlash('danger','Une erreur de paiement s\'est produite');
+            return $this->redirectToRoute('echec');
         }
-       $session->clear();
-       return $this->redirectToRoute('accueil');
+            
+        
+    }
+    
+    /**
+     * @Route("/succes", name="succes")
+     */
+    
+    public function succes(){
+        
+        $session = new Session();
+        $session->clear();
+        return $this->render('louvre/succes.html.twig');
+        
+    }
+    
+     /**
+     * @Route("/echec", name="echec")
+     */
+    
+    public function echec(){
+        $session = new Session();
+        $session->clear();
+        return $this->render('louvre/echec.html.twig');
         
     }
 

@@ -2,10 +2,8 @@
 
 {% block title %}Page de réservation{% endblock %}
 {% block stylesheets %}
-    {{ parent() }}
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/css/bootstrap-datepicker.css">
 {% endblock %}
-{% form_theme formReservation 'bootstrap_4_layout.html.twig' %}
 {% block menu%}
   <div class="collapse navbar-collapse" id="navbarColor01">
     <ul class="navbar-nav mr-auto">
@@ -18,6 +16,7 @@
     </ul>
    {%endblock%}
 {% block head%}
+    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/js/bootstrap-datepicker.min.js"></script>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="{{ path('accueil') }}">Accueil</a></li>
         <li class="breadcrumb-item active">Reservations</li>
@@ -66,11 +65,9 @@
         <input type="submit" id="envoyer" name="envoyer" value="Envoyer" class="btn btn-success">
 
         {{ form_end(formReservation) }}
+    </div>
         {% block javascripts %}
-        
-    <script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.6.0/js/bootstrap-datepicker.min.js"></script>
-
-       <script>
+        <script>
         
     //options françaises du datepicker
     (function($){
@@ -86,6 +83,7 @@
                 weekStart: 1,
                 format: "dd/mm/yyyy"
                     };
+                //preventDefault();
              }(jQuery));
              
     // datepicker avec ses options
@@ -95,26 +93,27 @@
             format: "dd/mm/yyyy",
             autoclose: true,
             todayHighlight: true,
+            
             });
            
         });
     
-    //modification de __name__ et __nama__label__ par 1 numéro
+    //modification de __name__ et __name__label__ par 1 numéro
     document.querySelector("#ajout").addEventListener('click', function () {
 
         var billet = document.querySelector("#reservation_billets");
         var prototype = billet.dataset.prototype;
         var index = document.getElementById("reservation_nb_billets");
 
-            for (var i = 0; i < index.value; i++) {
+            for (var i = 0; i <index.value; i++) {
                 var ligne = i + 1;
                 billet.innerHTML += prototype.replace(/__name__label__/g, 'Billet n°' + ligne).replace(/__name__/g, ligne);
 
                 }
-                    
+            document.getElementById("ajout").disabled = true;           
     }
  );
   
-            </script>
+        </script>
         {% endblock %}   
     {% endblock %}

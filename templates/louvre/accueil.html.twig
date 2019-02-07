@@ -1,22 +1,18 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Page d'accueil!{% endblock %}
-{% block head%}
-    <div class="container">
-    <img src="{{ asset ('images/Louvre_Museum_Wikimedia_Commons.jpg')}}" class="img-responsive">
-    </div>
-{%endblock%}
-{% block body %}
-    <style>
-        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-    </style>
 
+{% block head%}
+    <img src="{{ asset ('images/Louvre_Museum_Wikimedia_Commons.jpg')}}"  class="d-block mx-auto img-fluid" max-width="100%" height=auto">  
+{%endblock%}
+
+{% block body %}
+   
     <div class="example-wrapper">
-        <h1>Page d'accueil de Louvre -OC! ✅</h1>
+        <h1>Page d'accueil de Louvre - OC </h1>
         <br><br>
 
-        <table class="table">
+        <center><table class="table table-striped">
             <thead>
                 <tr>
                     <th scope="col">Type de tarif</th>
@@ -31,9 +27,53 @@
                     </tr>
                 {% endfor %}
             </tbody>
-        </table>
+            </table></center>
         <p> *Tarif normal à partir de 12 ans / Gratuit pour les enfants de moins de 4 ans</p>
-    </div>
+    </div><br><br>
+        
+ 
+    <div class="card-deck mb-4 text-center">
+           <div class="card mb-4 box-shadow rounded">
+             <div class="card-header bg-info">
+               <h4 class="my-0 font-weight-normal text-white">Tarif Normal</h4>
+             </div>
+             <div class="card-body ">
+               <h1 class="card-title pricing-card-title">16€ <small class="text-muted">Journée</small></h1>
+               <h1 class="card-title pricing-card-title">8€ <small class="text-muted">Demi-journée</small></h1>
+               <a class="btn btn-primary" href={{ path('reservation') }} >Réservez</a>
+             </div>
+           </div>
+           <div class="card mb-3 box-shadow">
+             <div class="card-header bg-success">
+               <h4 class="my-0 font-weight-normal text-white">Tarif Enfants</h4>
+             </div>
+             <div class="card-body">
+               <h1 class="card-title pricing-card-title">8€ <small class="text-muted">Journée</small></h1>
+               <h1 class="card-title pricing-card-title">4€ <small class="text-muted">Demi-journée</small></h1>
+               <a class="btn btn-primary" href={{ path('reservation') }} >Réservez</a>
+             </div>
+           </div>
+           <div class="card mb-3 box-shadow">
+             <div class="card-header bg-warning">
+               <h4 class="my-0 font-weight-normal text-white">Tarif Séniors</h4>
+             </div>
+             <div class="card-body">
+               <h1 class="card-title pricing-card-title">12€ <small class="text-muted">Journée</small></h1>
+               <h1 class="card-title pricing-card-title">6€ <small class="text-muted">Demi-journée</small></h1>
+               <a class="btn btn-primary" href={{ path('reservation') }} >Réservez</a>
+                </div>
+           </div>
 
-
+           <div class="card mb-3 box-shadow">
+             <div class="card-header bg-dark">
+               <h4 class="my-0 font-weight-normal text-white">Tarif réduit</h4>
+             </div>
+             <div class="card-body">
+               <h1 class="card-title pricing-card-title">10€ <small class="text-muted">Journée</small></h1>
+               <h1 class="card-title pricing-card-title">5€ <small class="text-muted">Demi-journée</small></h1>
+               <a class="btn btn-primary" href={{ path('reservation') }} >Réservez</a>
+             </div>
+           </div>
+         </div>
+                
 {% endblock %}
