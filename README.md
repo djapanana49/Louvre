@@ -6,7 +6,7 @@ Langage
 PHP avec Symfony 4.1
 
 URL
-http://www.projets-opc-nana.com/
+https://www.projets-opc-nana.com/
 
 - Un formulaire de réservation en ligne 
 - Gestion des réservation en fonction des dates  
